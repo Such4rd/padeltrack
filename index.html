@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Padel Event Tracker</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="header">
+        <h1>Padel Event Tracker</h1>
+        <div class="event-counter">Eventos registrados: <span id="event-count">0</span></div>
+    </div>
+
+    <div class="control-section">
+        <div class="section-title">Jugador</div>
+        <div class="button-group player-buttons">
+            <button class="btn selected" data-player="J1" data-team="OUR">J1</button>
+            <button class="btn" data-player="J2" data-team="OUR">J2</button>
+            <button class="btn" data-player="R1" data-team="RIVAL">R1</button>
+            <button class="btn" data-player="R2" data-team="RIVAL">R2</button>
+        </div>
+    </div>
+
+    <div class="control-section">
+        <div class="section-title">Golpe</div>
+        <div class="button-group stroke-buttons">
+            <button class="btn selected" data-stroke="DERECHA">DERECHA</button>
+            <button class="btn" data-stroke="REVES">REVÉS</button>
+            <button class="btn" data-stroke="VOLEA">VOLEA</button>
+            <button class="btn" data-stroke="BANDEJA">BANDEJA</button>
+            <button class="btn" data-stroke="VIBORA">VÍBORA</button>
+            <button class="btn" data-stroke="SMASH">SMASH</button>
+            <button class="btn" data-stroke="GLOBO">GLOBO</button>
+            <button class="btn" data-stroke="DEJADA">DEJADA</button>
+            <button class="btn" data-stroke="OTRO">OTRO</button>
+        </div>
+    </div>
+
+    <div class="control-section">
+        <div class="section-title">Resultado</div>
+        <div class="button-group outcome-buttons">
+            <button class="btn selected" data-outcome="WINNER">WINNER</button>
+            <button class="btn" data-outcome="FORCED_ERROR">ERROR FORZADO</button>
+            <button class="btn" data-outcome="UNFORCED_ERROR">ERROR NO FORZADO</button>
+        </div>
+    </div>
+
+    <div class="court-container">
+        <div class="padel-court" id="padel-court">
+            <div class="court-lines">
+                <div class="net"></div>
+                <div class="service-lines-x"></div>
+                <div class="service-lines-y"></div>                
+            </div>
+        </div>
+        
+        <div class="events-table-container">
+            <h3 class="table-title">Eventos Registrados</h3>
+            <div class="table-wrapper">
+                <table id="events-table" class="events-table">
+                    <thead>
+                        <tr>
+                            <th>Punto</th>
+                            <th>Jugador</th>
+                            <th>Golpe</th>
+                            <th>Resultado</th>
+                            <th>Posición</th>
+                        </tr>
+                    </thead>
+                    <tbody id="events-table-body">
+                        <tr class="no-events">
+                            <td colspan="5">No hay eventos registrados</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="action-buttons">
+        <button class="action-btn undo-btn" id="undo-btn" disabled>DESHACER</button>
+        <button class="action-btn export-btn" id="export-btn" disabled>EXPORTAR CSV</button>
+    </div>
+
+    <div id="status-message"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>
