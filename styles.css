@@ -24,6 +24,17 @@ body {
   gap: 6px;
 }
 
+.section-label {
+  margin-top: 2px;
+  padding-top: 4px;
+  border-top: 1px solid #2f2f2f;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+  color: #7a7a7a;
+  padding-left: 2px;
+}
+
 button,
 select,
 input {
