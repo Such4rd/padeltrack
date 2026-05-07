@@ -60,6 +60,13 @@ class PadelEventTracker {
     this.currentPointResult = "WON";
     this.currentOutcome = "UNFORCED_ERROR";
 
+    this.score = {
+      ourGames: 0,
+      rivalGames: 0,
+      ourPoints: 0,
+      rivalPoints: 0
+    };
+
     this.cronoSegundos = 0;
     this.cronoInterval = null;
     this.cronoRunning = false;
@@ -71,6 +78,7 @@ class PadelEventTracker {
     this.initEvents();
     this.updateUI();
     this.updateStrokeCount();
+    this.renderScore();
   }
 
   initStrokeSelectors() {
@@ -147,6 +155,11 @@ class PadelEventTracker {
 
     document.getElementById("undo-btn").addEventListener("click", () => this.undoLastEvent());
     document.getElementById("export-btn").addEventListener("click", () => this.exportCSV());
+
+    document.getElementById("deuce-mode").addEventListener("change", () => {
+      this.recalculateScore();
+      this.renderScore();
+    });
   }
 
   setSelected(selector, selectedButton) {
@@ -207,6 +220,106 @@ class PadelEventTracker {
     input.value = Math.max(1, current + value);
   }
 
+  getDeuceMode() {
+    return document.getElementById("deuce-mode").value;
+  }
+
+  addScorePoint(winner) {
+    if (winner === "OUR") {
+      this.score.ourPoints++;
+    } else {
+      this.score.rivalPoints++;
+    }
+
+    this.normalizeGameScore();
+  }
+
+  normalizeGameScore() {
+    const our = this.score.ourPoints;
+    const rival = this.score.rivalPoints;
+    const mode = this.getDeuceMode();
+
+    if (mode === "GOLDEN_POINT") {
+      if (our >= 4 && rival >= 3) {
+        this.winGame("OUR");
+      } else if (rival >= 4 && our >= 3) {
+        this.winGame("RIVAL");
+      } else if (our >= 4) {
+        this.winGame("OUR");
+      } else if (rival >= 4) {
+        this.winGame("RIVAL");
+      }
+
+      return;
+    }
+
+    if (our >= 4 && our - rival >= 2) {
+      this.winGame("OUR");
+    }
+
+    if (rival >= 4 && rival - our >= 2) {
+      this.winGame("RIVAL");
+    }
+  }
+
+  winGame(team) {
+    if (team === "OUR") {
+      this.score.ourGames++;
+    } else {
+      this.score.rivalGames++;
+    }
+
+    this.score.ourPoints = 0;
+    this.score.rivalPoints = 0;
+  }
+
+  getPointLabel(ourPoints, rivalPoints, team) {
+    const labels = ["0", "15", "30", "40"];
+    const own = team === "OUR" ? ourPoints : rivalPoints;
+    const other = team === "OUR" ? rivalPoints : ourPoints;
+
+    if (own <= 3 && other <= 3) {
+      return labels[own];
+    }
+
+    if (own >= 3 && other >= 3) {
+      if (own === other) return "40";
+
+      if (this.getDeuceMode() === "ADVANTAGE") {
+        return own > other ? "AD" : "40";
+      }
+
+      return "40";
+    }
+
+    return labels[Math.min(own, 3)];
+  }
+
+  renderScore() {
+    document.getElementById("our-games").textContent = this.score.ourGames;
+    document.getElementById("rival-games").textContent = this.score.rivalGames;
+
+    document.getElementById("our-points").textContent =
+      this.getPointLabel(this.score.ourPoints, this.score.rivalPoints, "OUR");
+
+    document.getElementById("rival-points").textContent =
+      this.getPointLabel(this.score.ourPoints, this.score.rivalPoints, "RIVAL");
+  }
+
+  recalculateScore() {
+    this.score = {
+      ourGames: 0,
+      rivalGames: 0,
+      ourPoints: 0,
+      rivalPoints: 0
+    };
+
+    this.events.forEach(event => {
+      const winner = event.point_result === "WON" ? "OUR" : "RIVAL";
+      this.addScorePoint(winner);
+    });
+  }
+
   updateStrokeCount() {
     const selectedStroke = this.subtypeSelect.value;
     const selectedCategory = this.categorySelect.value;
@@ -223,6 +336,10 @@ class PadelEventTracker {
   }
 
   registerPoint(zone) {
+    const winner = this.currentPointResult === "WON" ? "OUR" : "RIVAL";
+
+    this.addScorePoint(winner);
+
     const event = {
       timestamp: new Date().toISOString(),
       point_id: this.pointId,
@@ -237,7 +354,12 @@ class PadelEventTracker {
       serve_number: document.getElementById("serve-number").value,
       serve_direction: document.getElementById("serve-direction").value,
       court_zone: zone,
-      point_duration_seconds: this.cronoSegundos
+      point_duration_seconds: this.cronoSegundos,
+      deuce_mode: this.getDeuceMode(),
+      our_games_after: this.score.ourGames,
+      rival_games_after: this.score.rivalGames,
+      our_points_after: this.getPointLabel(this.score.ourPoints, this.score.rivalPoints, "OUR"),
+      rival_points_after: this.getPointLabel(this.score.ourPoints, this.score.rivalPoints, "RIVAL")
     };
 
     this.events.push(event);
@@ -246,6 +368,7 @@ class PadelEventTracker {
     this.modifyRally(1);
     this.updateUI();
     this.updateStrokeCount();
+    this.renderScore();
   }
 
   undoLastEvent() {
@@ -254,8 +377,10 @@ class PadelEventTracker {
     this.events.pop();
     this.pointId = Math.max(1, this.pointId - 1);
 
+    this.recalculateScore();
     this.updateUI();
     this.updateStrokeCount();
+    this.renderScore();
   }
 
   updateUI() {
@@ -272,7 +397,7 @@ class PadelEventTracker {
     }
 
     lastEventBox.textContent =
-      `P${lastEvent.point_id} · ${lastEvent.point_result} · ${lastEvent.player_id} · ${lastEvent.stroke_type} · ${lastEvent.outcome} · ${lastEvent.court_zone} · ${lastEvent.point_duration_seconds}s`;
+      `P${lastEvent.point_id} · ${lastEvent.point_result} · ${lastEvent.player_id} · ${lastEvent.stroke_type} · ${lastEvent.outcome} · ${lastEvent.court_zone} · ${lastEvent.our_games_after}-${lastEvent.rival_games_after}`;
   }
 
   exportCSV() {
@@ -290,7 +415,12 @@ class PadelEventTracker {
       "serve_number",
       "serve_direction",
       "court_zone",
-      "point_duration_seconds"
+      "point_duration_seconds",
+      "deuce_mode",
+      "our_games_after",
+      "rival_games_after",
+      "our_points_after",
+      "rival_points_after"
     ];
 
     const rows = this.events.map(event => {
