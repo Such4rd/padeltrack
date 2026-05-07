@@ -8,79 +8,83 @@
 </head>
 <body>
 
-  <main class="app">
+<main class="app">
 
-    <section class="crono-row">
-      <button id="start-crono">▶</button>
-      <button id="stop-crono">⏸</button>
-      <button id="minus-crono">-1s</button>
-      <div id="crono-display">00:00</div>
-      <button id="plus-crono">+1s</button>
-      <button id="reset-crono">R</button>
-    </section>
+  <section class="crono-row">
+    <button id="toggle-crono">▶</button>
+    <div id="crono-display">00:00</div>
+    <button id="minus-crono">-5s</button>
+    <button id="plus-crono">+5s</button>
+  </section>
 
-    <section class="top-row">
-      <select id="server-select">
-        <option value="J1">Saca J1</option>
-        <option value="J2">Saca J2</option>
-        <option value="R1">Saca R1</option>
-        <option value="R2">Saca R2</option>
-      </select>
+  <section class="top-row">
+    <select id="server-select">
+      <option value="J1">Saca J1</option>
+      <option value="J2">Saca J2</option>
+      <option value="R1">Saca R1</option>
+      <option value="R2">Saca R2</option>
+    </select>
 
-      <select id="serve-number">
-        <option value="1">1º</option>
-        <option value="2">2º</option>
-      </select>
+    <select id="serve-number">
+      <option value="1">1º</option>
+      <option value="2">2º</option>
+    </select>
 
-      <select id="serve-direction">
-        <option value="">Dir.</option>
-        <option value="T">T</option>
-        <option value="Cristal">Cristal</option>
-        <option value="Centro">Centro</option>
-      </select>
+    <select id="serve-direction">
+      <option value="">Dir.</option>
+      <option value="T">T</option>
+      <option value="Cristal">Cristal</option>
+      <option value="Centro">Centro</option>
+    </select>
 
-      <input type="number" id="rally-input" min="1" value="1" placeholder="Rally" />
-    </section>
+    <div class="rally-box">
+      <button id="minus-rally">-</button>
+      <input type="number" id="rally-input" min="1" value="1" />
+      <button id="plus-rally">+</button>
+    </div>
+  </section>
 
-    <section class="players-row">
-      <button class="btn selected" data-player="J1" data-team="OUR">J1</button>
-      <button class="btn" data-player="J2" data-team="OUR">J2</button>
-      <button class="btn" data-player="R1" data-team="RIVAL">R1</button>
-      <button class="btn" data-player="R2" data-team="RIVAL">R2</button>
-    </section>
+  <section class="players-row">
+    <button class="btn selected" data-player="J1" data-team="OUR">J1</button>
+    <button class="btn" data-player="J2" data-team="OUR">J2</button>
+    <button class="btn" data-player="R1" data-team="RIVAL">R1</button>
+    <button class="btn" data-player="R2" data-team="RIVAL">R2</button>
+  </section>
 
-    <section class="select-row">
-      <select id="stroke-category"></select>
-    </section>
+  <section class="outcome-row">
+    <button class="btn selected nf" data-outcome="UNFORCED_ERROR">NF</button>
+    <button class="btn f" data-outcome="FORCED_ERROR">F</button>
+    <button class="btn w" data-outcome="WINNER">W</button>
+  </section>
 
-    <section class="select-row">
-      <select id="stroke-subtype"></select>
-    </section>
+  <section class="select-row">
+    <select id="stroke-category"></select>
+  </section>
 
-    <section class="outcome-row">
-      <button class="btn selected" data-outcome="UNFORCED_ERROR">No forzado</button>
-      <button class="btn" data-outcome="FORCED_ERROR">Forzado</button>
-      <button class="btn" data-outcome="WINNER">Winner</button>
-    </section>
+  <section class="select-row golpe-row">
+    <select id="stroke-subtype"></select>
+    <div id="stroke-count">0</div>
+  </section>
 
-    <section class="court" id="padel-court">
-      <button class="court-zone" data-zone="RED">RED</button>
-      <button class="court-zone" data-zone="MEDIO">MEDIO</button>
-      <button class="court-zone" data-zone="FONDO">FONDO</button>
-    </section>
+  <section class="court" id="padel-court">
+    <button class="court-zone" data-zone="RED">RED</button>
+    <button class="court-zone" data-zone="MEDIO">MEDIO</button>
+    <button class="court-zone" data-zone="FONDO">FONDO</button>
+  </section>
 
-    <section class="bottom-row">
-      <span>Eventos: <strong id="event-count">0</strong></span>
-      <button id="undo-btn" disabled>Deshacer</button>
-      <button id="export-btn" disabled>CSV</button>
-    </section>
+  <section class="last-event" id="last-event">
+    Sin eventos
+  </section>
 
-    <section class="last-event" id="last-event">
-      Sin eventos registrados
-    </section>
+  <section class="bottom-row">
+    <span>Eventos: <strong id="event-count">0</strong></span>
+    <button id="reset-crono">Reset</button>
+    <button id="undo-btn" disabled>Undo</button>
+    <button id="export-btn" disabled>CSV</button>
+  </section>
 
-  </main>
+</main>
 
-  <script src="script.js"></script>
+<script src="script.js"></script>
 </body>
 </html>
