@@ -61,6 +61,7 @@ class PadelEventTracker {
 
     this.cronoSegundos = 0;
     this.cronoInterval = null;
+    this.cronoRunning = false;
 
     this.categorySelect = document.getElementById("stroke-category");
     this.subtypeSelect = document.getElementById("stroke-subtype");
@@ -68,6 +69,7 @@ class PadelEventTracker {
     this.initStrokeSelectors();
     this.initEvents();
     this.updateUI();
+    this.updateStrokeCount();
   }
 
   initStrokeSelectors() {
@@ -82,6 +84,11 @@ class PadelEventTracker {
 
     this.categorySelect.addEventListener("change", () => {
       this.updateSubtypeOptions();
+      this.updateStrokeCount();
+    });
+
+    this.subtypeSelect.addEventListener("change", () => {
+      this.updateStrokeCount();
     });
   }
 
@@ -103,6 +110,7 @@ class PadelEventTracker {
         this.currentPlayer = button.dataset.player;
         this.currentTeam = button.dataset.team;
         this.setSelected("[data-player]", button);
+        this.updateStrokeCount();
       });
     });
 
@@ -110,6 +118,7 @@ class PadelEventTracker {
       button.addEventListener("click", () => {
         this.currentOutcome = button.dataset.outcome;
         this.setSelected("[data-outcome]", button);
+        this.updateStrokeCount();
       });
     });
 
@@ -119,11 +128,13 @@ class PadelEventTracker {
       });
     });
 
-    document.getElementById("start-crono").addEventListener("click", () => this.startCrono());
-    document.getElementById("stop-crono").addEventListener("click", () => this.stopCrono());
-    document.getElementById("minus-crono").addEventListener("click", () => this.modifyCrono(-1));
-    document.getElementById("plus-crono").addEventListener("click", () => this.modifyCrono(1));
+    document.getElementById("toggle-crono").addEventListener("click", () => this.toggleCrono());
+    document.getElementById("minus-crono").addEventListener("click", () => this.modifyCrono(-5));
+    document.getElementById("plus-crono").addEventListener("click", () => this.modifyCrono(5));
     document.getElementById("reset-crono").addEventListener("click", () => this.resetCrono());
+
+    document.getElementById("minus-rally").addEventListener("click", () => this.modifyRally(-1));
+    document.getElementById("plus-rally").addEventListener("click", () => this.modifyRally(1));
 
     document.getElementById("undo-btn").addEventListener("click", () => this.undoLastEvent());
     document.getElementById("export-btn").addEventListener("click", () => this.exportCSV());
@@ -137,8 +148,19 @@ class PadelEventTracker {
     selectedButton.classList.add("selected");
   }
 
+  toggleCrono() {
+    if (this.cronoRunning) {
+      this.stopCrono();
+    } else {
+      this.startCrono();
+    }
+  }
+
   startCrono() {
     if (this.cronoInterval) return;
+
+    this.cronoRunning = true;
+    document.getElementById("toggle-crono").textContent = "⏸";
 
     this.cronoInterval = setInterval(() => {
       this.cronoSegundos++;
@@ -149,6 +171,8 @@ class PadelEventTracker {
   stopCrono() {
     clearInterval(this.cronoInterval);
     this.cronoInterval = null;
+    this.cronoRunning = false;
+    document.getElementById("toggle-crono").textContent = "▶";
   }
 
   resetCrono() {
@@ -166,6 +190,26 @@ class PadelEventTracker {
     const seconds = String(this.cronoSegundos % 60).padStart(2, "0");
 
     document.getElementById("crono-display").textContent = `${minutes}:${seconds}`;
+  }
+
+  modifyRally(value) {
+    const input = document.getElementById("rally-input");
+    const current = Number(input.value || 1);
+    input.value = Math.max(1, current + value);
+  }
+
+  updateStrokeCount() {
+    const selectedStroke = this.subtypeSelect.value;
+    const selectedCategory = this.categorySelect.value;
+
+    const count = this.events.filter(event =>
+      event.player_id === this.currentPlayer &&
+      event.stroke_category === selectedCategory &&
+      event.stroke_type === selectedStroke &&
+      event.outcome === this.currentOutcome
+    ).length;
+
+    document.getElementById("stroke-count").textContent = count;
   }
 
   registerPoint(zone) {
@@ -188,9 +232,9 @@ class PadelEventTracker {
     this.events.push(event);
     this.pointId++;
 
-    document.getElementById("rally-input").value = Number(event.rally || 0) + 1;
-
+    this.modifyRally(1);
     this.updateUI();
+    this.updateStrokeCount();
   }
 
   undoLastEvent() {
@@ -200,6 +244,7 @@ class PadelEventTracker {
     this.pointId = Math.max(1, this.pointId - 1);
 
     this.updateUI();
+    this.updateStrokeCount();
   }
 
   updateUI() {
@@ -211,7 +256,7 @@ class PadelEventTracker {
     const lastEventBox = document.getElementById("last-event");
 
     if (!lastEvent) {
-      lastEventBox.textContent = "Sin eventos registrados";
+      lastEventBox.textContent = "Sin eventos";
       return;
     }
 
