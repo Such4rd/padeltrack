@@ -82,10 +82,19 @@ input {
   padding: 0;
 }
 
+.point-result-row {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 5px;
+}
+
 .players-row {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
   gap: 5px;
+}
+
+.two-players {
+  grid-template-columns: repeat(2, 1fr);
 }
 
 .outcome-row {
@@ -96,6 +105,21 @@ input {
 
 .btn.selected {
   color: #fff;
+}
+
+.btn.selected.won {
+  background: #4caf50;
+  border-color: #4caf50;
+}
+
+.btn.selected.lost {
+  background: #b64040;
+  border-color: #b64040;
+}
+
+.players-row .btn.selected {
+  background: #4caf50;
+  border-color: #4caf50;
 }
 
 .btn.selected.nf {
@@ -109,11 +133,6 @@ input {
 }
 
 .btn.selected.w {
-  background: #4caf50;
-  border-color: #4caf50;
-}
-
-.players-row .btn.selected {
   background: #4caf50;
   border-color: #4caf50;
 }
