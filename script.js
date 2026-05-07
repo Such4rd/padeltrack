@@ -29,7 +29,7 @@ const STROKES = {
     "baja cruzada"
   ],
 
-  "Golpes especiales fondo": [
+  "Esp. fondo": [
     "bajada derecha",
     "bajada revés",
     "chiquita cruzada",
@@ -38,7 +38,7 @@ const STROKES = {
     "globo con cristal"
   ],
 
-  "Golpes especiales red": [
+  "Esp. red": [
     "bandeja paralela",
     "bandeja cruzada",
     "x3",
@@ -60,6 +60,9 @@ class PadelEventTracker {
     this.currentPointResult = "WON";
     this.currentOutcome = "UNFORCED_ERROR";
 
+    this.currentStrokeCategory = "Saque";
+    this.currentStrokeType = "saque t";
+
     this.score = {
       ourGames: 0,
       rivalGames: 0,
@@ -71,46 +74,83 @@ class PadelEventTracker {
     this.cronoInterval = null;
     this.cronoRunning = false;
 
-    this.categorySelect = document.getElementById("stroke-category");
-    this.subtypeSelect = document.getElementById("stroke-subtype");
+    this.categoryButtons = document.getElementById("category-buttons");
+    this.strokeButtons = document.getElementById("stroke-buttons");
 
-    this.initStrokeSelectors();
+    this.initStrokeButtons();
     this.initEvents();
     this.updateUI();
     this.updateStrokeCount();
     this.renderScore();
+    this.renderSelectedStroke();
   }
 
-  initStrokeSelectors() {
+  initStrokeButtons() {
+    this.categoryButtons.innerHTML = "";
+
     Object.keys(STROKES).forEach(category => {
-      const option = document.createElement("option");
-      option.value = category;
-      option.textContent = category;
-      this.categorySelect.appendChild(option);
+      const button = document.createElement("button");
+      button.className = "category-btn";
+      button.textContent = category;
+      button.dataset.category = category;
+
+      if (category === this.currentStrokeCategory) {
+        button.classList.add("selected");
+      }
+
+      button.addEventListener("click", () => {
+        this.currentStrokeCategory = category;
+        this.currentStrokeType = STROKES[category][0];
+
+        this.renderCategoryButtons();
+        this.renderStrokeButtons();
+        this.renderSelectedStroke();
+        this.updateStrokeCount();
+      });
+
+      this.categoryButtons.appendChild(button);
     });
 
-    this.updateSubtypeOptions();
+    this.renderStrokeButtons();
+  }
 
-    this.categorySelect.addEventListener("change", () => {
-      this.updateSubtypeOptions();
-      this.updateStrokeCount();
-    });
-
-    this.subtypeSelect.addEventListener("change", () => {
-      this.updateStrokeCount();
+  renderCategoryButtons() {
+    document.querySelectorAll(".category-btn").forEach(button => {
+      button.classList.toggle(
+        "selected",
+        button.dataset.category === this.currentStrokeCategory
+      );
     });
   }
 
-  updateSubtypeOptions() {
-    const category = this.categorySelect.value;
-    this.subtypeSelect.innerHTML = "";
+  renderStrokeButtons() {
+    this.strokeButtons.innerHTML = "";
 
-    STROKES[category].forEach(stroke => {
-      const option = document.createElement("option");
-      option.value = stroke;
-      option.textContent = stroke;
-      this.subtypeSelect.appendChild(option);
+    STROKES[this.currentStrokeCategory].forEach(stroke => {
+      const button = document.createElement("button");
+      button.className = "stroke-btn";
+      button.textContent = stroke;
+      button.dataset.stroke = stroke;
+
+      if (stroke === this.currentStrokeType) {
+        button.classList.add("selected");
+      }
+
+      button.addEventListener("click", () => {
+        this.currentStrokeType = stroke;
+
+        this.renderStrokeButtons();
+        this.renderSelectedStroke();
+        this.updateStrokeCount();
+      });
+
+      this.strokeButtons.appendChild(button);
     });
+  }
+
+  renderSelectedStroke() {
+    document.getElementById("selected-stroke").textContent =
+      `${this.currentStrokeCategory} · ${this.currentStrokeType}`;
   }
 
   initEvents() {
@@ -240,26 +280,15 @@ class PadelEventTracker {
     const mode = this.getDeuceMode();
 
     if (mode === "GOLDEN_POINT") {
-      if (our >= 4 && rival >= 3) {
-        this.winGame("OUR");
-      } else if (rival >= 4 && our >= 3) {
-        this.winGame("RIVAL");
-      } else if (our >= 4) {
-        this.winGame("OUR");
-      } else if (rival >= 4) {
-        this.winGame("RIVAL");
-      }
-
+      if (our >= 4 && rival >= 3) this.winGame("OUR");
+      else if (rival >= 4 && our >= 3) this.winGame("RIVAL");
+      else if (our >= 4) this.winGame("OUR");
+      else if (rival >= 4) this.winGame("RIVAL");
       return;
     }
 
-    if (our >= 4 && our - rival >= 2) {
-      this.winGame("OUR");
-    }
-
-    if (rival >= 4 && rival - our >= 2) {
-      this.winGame("RIVAL");
-    }
+    if (our >= 4 && our - rival >= 2) this.winGame("OUR");
+    if (rival >= 4 && rival - our >= 2) this.winGame("RIVAL");
   }
 
   winGame(team) {
@@ -278,17 +307,13 @@ class PadelEventTracker {
     const own = team === "OUR" ? ourPoints : rivalPoints;
     const other = team === "OUR" ? rivalPoints : ourPoints;
 
-    if (own <= 3 && other <= 3) {
-      return labels[own];
-    }
+    if (own <= 3 && other <= 3) return labels[own];
 
     if (own >= 3 && other >= 3) {
       if (own === other) return "40";
-
       if (this.getDeuceMode() === "ADVANTAGE") {
         return own > other ? "AD" : "40";
       }
-
       return "40";
     }
 
@@ -321,14 +346,11 @@ class PadelEventTracker {
   }
 
   updateStrokeCount() {
-    const selectedStroke = this.subtypeSelect.value;
-    const selectedCategory = this.categorySelect.value;
-
     const count = this.events.filter(event =>
       event.player_id === this.currentPlayer &&
       event.point_result === this.currentPointResult &&
-      event.stroke_category === selectedCategory &&
-      event.stroke_type === selectedStroke &&
+      event.stroke_category === this.currentStrokeCategory &&
+      event.stroke_type === this.currentStrokeType &&
       event.outcome === this.currentOutcome
     ).length;
 
@@ -346,8 +368,8 @@ class PadelEventTracker {
       point_result: this.currentPointResult,
       player_id: this.currentPlayer,
       player_team: this.currentTeam,
-      stroke_category: this.categorySelect.value,
-      stroke_type: this.subtypeSelect.value,
+      stroke_category: this.currentStrokeCategory,
+      stroke_type: this.currentStrokeType,
       outcome: this.currentOutcome,
       rally: document.getElementById("rally-input").value,
       server: document.getElementById("server-select").value,
@@ -365,7 +387,6 @@ class PadelEventTracker {
     this.events.push(event);
     this.pointId++;
 
-    this.modifyRally(1);
     this.updateUI();
     this.updateStrokeCount();
     this.renderScore();
