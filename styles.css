@@ -27,13 +27,13 @@ body {
 button,
 select,
 input {
-  height: 38px;
+  height: 36px;
   border: 1px solid #444;
   border-radius: 8px;
   background: #222;
   color: #fff;
-  font-size: 14px;
-  padding: 0 8px;
+  font-size: 13px;
+  padding: 0 6px;
 }
 
 button {
@@ -48,12 +48,12 @@ input {
 
 .header-row {
   display: grid;
-  grid-template-columns: 1fr 88px;
+  grid-template-columns: 1fr 86px;
   gap: 6px;
 }
 
 .scoreboard {
-  height: 76px;
+  height: 70px;
   background: #181818;
   border: 1px solid #333;
   border-radius: 8px;
@@ -61,41 +61,40 @@ input {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: 5px;
+  gap: 4px;
 }
 
 .score-line {
   display: grid;
   grid-template-columns: 1fr 34px 44px;
   align-items: center;
-  font-size: 16px;
+  font-size: 15px;
 }
 
 .score-line strong {
   text-align: center;
-  font-size: 22px;
+  font-size: 21px;
   color: #4caf50;
 }
 
 #deuce-mode {
-  height: 76px;
+  height: 70px;
   font-weight: 800;
-  text-align: center;
 }
 
 .crono-row {
   display: grid;
-  grid-template-columns: 48px 1fr 58px 58px;
-  gap: 6px;
+  grid-template-columns: 46px 1fr 56px 56px;
+  gap: 5px;
 }
 
 #crono-display {
-  height: 38px;
+  height: 36px;
   display: flex;
   align-items: center;
   justify-content: center;
   color: #4caf50;
-  font-size: 25px;
+  font-size: 24px;
   font-weight: 900;
   background: #181818;
   border-radius: 8px;
@@ -110,7 +109,7 @@ input {
 
 .rally-box {
   display: grid;
-  grid-template-columns: 32px 1fr 32px;
+  grid-template-columns: 30px 1fr 30px;
   gap: 3px;
 }
 
@@ -119,25 +118,45 @@ input {
   padding: 0;
 }
 
-.point-result-row {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 5px;
-}
-
-.players-row {
-  display: grid;
-  gap: 5px;
-}
-
+.point-result-row,
 .two-players {
+  display: grid;
   grid-template-columns: repeat(2, 1fr);
+  gap: 5px;
 }
 
 .outcome-row {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 5px;
+}
+
+.category-buttons {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 4px;
+}
+
+.stroke-buttons {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 4px;
+  max-height: 84px;
+  overflow-y: auto;
+}
+
+.category-btn,
+.stroke-btn {
+  height: 34px;
+  font-size: 11px;
+  line-height: 1.05;
+  padding: 2px 4px;
+}
+
+.category-btn.selected,
+.stroke-btn.selected {
+  background: #4caf50;
+  border-color: #4caf50;
 }
 
 .btn.selected {
@@ -174,31 +193,40 @@ input {
   border-color: #4caf50;
 }
 
-.select-row {
-  display: grid;
-  grid-template-columns: 1fr;
-}
-
 .golpe-row {
-  grid-template-columns: 1fr 52px;
+  display: grid;
+  grid-template-columns: 1fr 50px;
   gap: 5px;
 }
 
+#selected-stroke,
 #stroke-count {
-  height: 38px;
+  height: 34px;
   border-radius: 8px;
   border: 1px solid #444;
   background: #181818;
-  color: #4caf50;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-weight: 900;
+  font-weight: 800;
+}
+
+#selected-stroke {
+  font-size: 12px;
+  color: #ddd;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  padding: 0 8px;
+}
+
+#stroke-count {
+  color: #4caf50;
   font-size: 18px;
 }
 
 .court {
-  height: 72px;
+  height: 68px;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 5px;
@@ -213,7 +241,7 @@ input {
   border-radius: 6px;
   border: 1px solid rgba(255,255,255,0.8);
   background: rgba(76, 175, 80, 0.25);
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 900;
 }
 
@@ -222,12 +250,12 @@ input {
 }
 
 .last-event {
-  min-height: 30px;
+  min-height: 28px;
   padding: 6px 8px;
   background: #1b1b1b;
   border: 1px solid #333;
   border-radius: 8px;
-  font-size: 13px;
+  font-size: 12px;
   color: #ddd;
   white-space: nowrap;
   overflow: hidden;
@@ -236,10 +264,10 @@ input {
 
 .bottom-row {
   display: grid;
-  grid-template-columns: 1fr 58px 58px 58px;
+  grid-template-columns: 1fr 56px 56px 56px;
   gap: 5px;
   align-items: center;
-  font-size: 14px;
+  font-size: 13px;
 }
 
 #undo-btn {
@@ -258,43 +286,57 @@ button:disabled {
   button,
   select,
   input {
-    height: 34px;
-    font-size: 12px;
-    padding: 0 5px;
+    height: 33px;
+    font-size: 11px;
   }
 
   .header-row {
-    grid-template-columns: 1fr 76px;
+    grid-template-columns: 1fr 74px;
   }
 
   .scoreboard,
   #deuce-mode {
-    height: 66px;
-  }
-
-  .score-line {
-    font-size: 13px;
-    grid-template-columns: 1fr 28px 38px;
-  }
-
-  .score-line strong {
-    font-size: 19px;
-  }
-
-  #crono-display {
-    height: 34px;
-    font-size: 21px;
-  }
-
-  .crono-row {
-    grid-template-columns: 42px 1fr 48px 48px;
-  }
-
-  .court {
     height: 64px;
   }
 
+  .score-line {
+    font-size: 12px;
+    grid-template-columns: 1fr 26px 36px;
+  }
+
+  .score-line strong {
+    font-size: 18px;
+  }
+
+  #crono-display {
+    height: 33px;
+    font-size: 20px;
+  }
+
+  .crono-row {
+    grid-template-columns: 40px 1fr 46px 46px;
+  }
+
+  .category-buttons {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .stroke-buttons {
+    grid-template-columns: repeat(3, 1fr);
+    max-height: 76px;
+  }
+
+  .category-btn,
+  .stroke-btn {
+    height: 32px;
+    font-size: 10px;
+  }
+
+  .court {
+    height: 60px;
+  }
+
   .bottom-row {
-    grid-template-columns: 1fr 52px 52px 52px;
+    grid-template-columns: 1fr 50px 50px 50px;
   }
 }
