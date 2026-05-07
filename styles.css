@@ -46,6 +46,43 @@ input {
   width: 100%;
 }
 
+.header-row {
+  display: grid;
+  grid-template-columns: 1fr 88px;
+  gap: 6px;
+}
+
+.scoreboard {
+  height: 76px;
+  background: #181818;
+  border: 1px solid #333;
+  border-radius: 8px;
+  padding: 6px 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+}
+
+.score-line {
+  display: grid;
+  grid-template-columns: 1fr 34px 44px;
+  align-items: center;
+  font-size: 16px;
+}
+
+.score-line strong {
+  text-align: center;
+  font-size: 22px;
+  color: #4caf50;
+}
+
+#deuce-mode {
+  height: 76px;
+  font-weight: 800;
+  text-align: center;
+}
+
 .crono-row {
   display: grid;
   grid-template-columns: 48px 1fr 58px 58px;
@@ -224,6 +261,24 @@ button:disabled {
     height: 34px;
     font-size: 12px;
     padding: 0 5px;
+  }
+
+  .header-row {
+    grid-template-columns: 1fr 76px;
+  }
+
+  .scoreboard,
+  #deuce-mode {
+    height: 66px;
+  }
+
+  .score-line {
+    font-size: 13px;
+    grid-template-columns: 1fr 28px 38px;
+  }
+
+  .score-line strong {
+    font-size: 19px;
   }
 
   #crono-display {
