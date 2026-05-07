@@ -57,6 +57,7 @@ class PadelEventTracker {
 
     this.currentPlayer = "J1";
     this.currentTeam = "OUR";
+    this.currentPointResult = "WON";
     this.currentOutcome = "UNFORCED_ERROR";
 
     this.cronoSegundos = 0;
@@ -105,6 +106,14 @@ class PadelEventTracker {
   }
 
   initEvents() {
+    document.querySelectorAll("[data-point-result]").forEach(button => {
+      button.addEventListener("click", () => {
+        this.currentPointResult = button.dataset.pointResult;
+        this.setSelected("[data-point-result]", button);
+        this.updateStrokeCount();
+      });
+    });
+
     document.querySelectorAll("[data-player]").forEach(button => {
       button.addEventListener("click", () => {
         this.currentPlayer = button.dataset.player;
@@ -204,6 +213,7 @@ class PadelEventTracker {
 
     const count = this.events.filter(event =>
       event.player_id === this.currentPlayer &&
+      event.point_result === this.currentPointResult &&
       event.stroke_category === selectedCategory &&
       event.stroke_type === selectedStroke &&
       event.outcome === this.currentOutcome
@@ -216,6 +226,7 @@ class PadelEventTracker {
     const event = {
       timestamp: new Date().toISOString(),
       point_id: this.pointId,
+      point_result: this.currentPointResult,
       player_id: this.currentPlayer,
       player_team: this.currentTeam,
       stroke_category: this.categorySelect.value,
@@ -261,13 +272,14 @@ class PadelEventTracker {
     }
 
     lastEventBox.textContent =
-      `P${lastEvent.point_id} · ${lastEvent.player_id} · ${lastEvent.stroke_type} · ${lastEvent.outcome} · ${lastEvent.court_zone} · ${lastEvent.point_duration_seconds}s`;
+      `P${lastEvent.point_id} · ${lastEvent.point_result} · ${lastEvent.player_id} · ${lastEvent.stroke_type} · ${lastEvent.outcome} · ${lastEvent.court_zone} · ${lastEvent.point_duration_seconds}s`;
   }
 
   exportCSV() {
     const headers = [
       "timestamp",
       "point_id",
+      "point_result",
       "player_id",
       "player_team",
       "stroke_category",
