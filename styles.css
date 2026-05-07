@@ -1,298 +1,181 @@
-
-/* =========================
-   RESET Y BASE
-========================= */
-
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  width: 100%;
+  min-height: 100%;
+  background: #111;
+  color: #fff;
+  font-family: Arial, sans-serif;
 }
 
 body {
-    font-family: Arial, sans-serif;
-    background: #121212;
-    color: #ffffff;
-    padding: 15px;
+  padding: 6px;
 }
 
-/* =========================
-   HEADER
-========================= */
-
-.header {
-    margin-bottom: 20px;
+.app {
+  width: 100%;
+  max-width: 520px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 }
 
-.header h1 {
-    font-size: 2rem;
-    margin-bottom: 10px;
-    color: #4CAF50;
+button,
+select,
+input {
+  height: 38px;
+  border: 1px solid #444;
+  border-radius: 8px;
+  background: #222;
+  color: #fff;
+  font-size: 14px;
+  padding: 0 8px;
 }
 
-.event-counter {
-    font-size: 1rem;
-    color: #ccc;
+button {
+  cursor: pointer;
+  font-weight: 600;
 }
-
-/* =========================
-   CRONO
-========================= */
-
-.crono-container {
-    display: flex;
-    gap: 10px;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 20px;
-    flex-wrap: wrap;
-}
-
-#crono-display {
-    font-size: 2rem;
-    font-weight: bold;
-    color: #4CAF50;
-    min-width: 100px;
-    text-align: center;
-}
-
-/* =========================
-   CONTROLES EXTRA
-========================= */
-
-.extra-controls {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-bottom: 20px;
-}
-
-.extra-controls select,
-.extra-controls input {
-    flex: 1;
-    min-width: 140px;
-}
-
-/* =========================
-   SECCIONES
-========================= */
-
-.control-section {
-    margin-bottom: 20px;
-}
-
-.section-title {
-    margin-bottom: 10px;
-    font-weight: bold;
-    font-size: 1rem;
-    color: #4CAF50;
-}
-
-/* =========================
-   BOTONES
-========================= */
-
-.button-group {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-}
-
-.btn,
-.action-btn {
-    padding: 12px 16px;
-    border: none;
-    border-radius: 10px;
-    background: #2a2a2a;
-    color: white;
-    cursor: pointer;
-    transition: 0.2s;
-    font-size: 0.95rem;
-}
-
-.btn:hover,
-.action-btn:hover {
-    background: #3a3a3a;
-}
-
-.btn.selected {
-    background: #4CAF50;
-    color: white;
-}
-
-.action-btn:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-}
-
-/* =========================
-   SELECTS / INPUTS
-========================= */
 
 select,
 input {
-    width: 100%;
-    padding: 12px;
-    border-radius: 10px;
-    border: 1px solid #444;
-    background: #1e1e1e;
-    color: white;
-    font-size: 1rem;
+  width: 100%;
 }
 
-/* =========================
-   PISTA
-========================= */
-
-.court-container {
-    margin-top: 20px;
+.crono-row {
+  display: grid;
+  grid-template-columns: 38px 38px 48px 1fr 48px 38px;
+  gap: 5px;
+  align-items: center;
 }
 
-.padel-court {
-    position: relative;
-    width: 100%;
-    aspect-ratio: 2 / 1;
-    background: #1d6f42;
-    border: 4px solid white;
-    border-radius: 10px;
-    overflow: hidden;
-    margin-bottom: 20px;
+#crono-display {
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #4caf50;
+  font-size: 25px;
+  font-weight: 800;
+  background: #181818;
+  border-radius: 8px;
+  border: 1px solid #333;
 }
 
-.court-lines {
-    position: absolute;
-    width: 100%;
-    height: 100%;
+.top-row {
+  display: grid;
+  grid-template-columns: 1.3fr 0.65fr 0.8fr 0.65fr;
+  gap: 5px;
 }
 
-.net {
-    position: absolute;
-    top: 50%;
-    left: 0;
-    width: 100%;
-    height: 4px;
-    background: white;
-    transform: translateY(-50%);
+.players-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 5px;
 }
 
-.service-lines-x {
-    position: absolute;
-    top: 25%;
-    left: 0;
-    width: 100%;
-    height: 2px;
-    background: white;
+.select-row {
+  display: grid;
+  grid-template-columns: 1fr;
 }
 
-.service-lines-y {
-    position: absolute;
-    top: 0;
-    left: 50%;
-    width: 2px;
-    height: 100%;
-    background: white;
-    transform: translateX(-50%);
+.outcome-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 5px;
 }
 
-/* =========================
-   TABLA
-========================= */
-
-.events-table-container {
-    margin-top: 20px;
+.btn.selected {
+  background: #4caf50;
+  border-color: #4caf50;
+  color: #fff;
 }
 
-.table-title {
-    margin-bottom: 10px;
-    color: #4CAF50;
+.court {
+  height: 150px;
+  display: grid;
+  grid-template-rows: repeat(3, 1fr);
+  gap: 4px;
+  background: #0b3d26;
+  border: 3px solid #fff;
+  border-radius: 10px;
+  padding: 5px;
 }
 
-.table-wrapper {
-    overflow-x: auto;
+.court-zone {
+  height: auto;
+  border-radius: 6px;
+  border: 1px solid rgba(255,255,255,0.8);
+  background: rgba(76, 175, 80, 0.25);
+  color: #fff;
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: 1px;
 }
 
-.events-table {
-    width: 100%;
-    border-collapse: collapse;
-    background: #1e1e1e;
-    border-radius: 10px;
-    overflow: hidden;
+.court-zone:active {
+  background: #4caf50;
 }
 
-.events-table th,
-.events-table td {
-    padding: 10px;
-    text-align: left;
-    border-bottom: 1px solid #333;
+.bottom-row {
+  display: grid;
+  grid-template-columns: 1fr 90px 70px;
+  gap: 5px;
+  align-items: center;
+  font-size: 14px;
 }
 
-.events-table th {
-    background: #2a2a2a;
-    color: #4CAF50;
+#undo-btn {
+  background: #7a2b2b;
 }
 
-.events-table tr:hover {
-    background: #2a2a2a;
+#export-btn {
+  background: #2d6b2f;
 }
 
-.no-events td {
-    text-align: center;
-    color: #aaa;
+button:disabled {
+  opacity: 0.4;
 }
 
-/* =========================
-   BOTONES ACCIONES
-========================= */
-
-.action-buttons {
-    display: flex;
-    gap: 10px;
-    margin-top: 20px;
-    flex-wrap: wrap;
+.last-event {
+  min-height: 26px;
+  padding: 6px 8px;
+  background: #1b1b1b;
+  border: 1px solid #333;
+  border-radius: 8px;
+  font-size: 13px;
+  color: #ddd;
 }
 
-.undo-btn {
-    background: #d9534f;
-}
+@media (max-width: 390px) {
+  button,
+  select,
+  input {
+    height: 34px;
+    font-size: 12px;
+    padding: 0 5px;
+  }
 
-.export-btn {
-    background: #4CAF50;
-}
+  #crono-display {
+    height: 34px;
+    font-size: 21px;
+  }
 
-/* =========================
-   STATUS
-========================= */
+  .crono-row {
+    grid-template-columns: 34px 34px 42px 1fr 42px 34px;
+  }
 
-#status-message {
-    margin-top: 15px;
-    color: #4CAF50;
-    font-size: 0.95rem;
-}
+  .court {
+    height: 130px;
+  }
 
-/* =========================
-   RESPONSIVE
-========================= */
-
-@media (max-width: 768px) {
-
-    .header h1 {
-        font-size: 1.7rem;
-    }
-
-    .btn,
-    .action-btn {
-        width: 100%;
-    }
-
-    .button-group {
-        flex-direction: column;
-    }
-
-    .extra-controls {
-        flex-direction: column;
-    }
-
-    .crono-container {
-        justify-content: flex-start;
-    }
+  .court-zone {
+    font-size: 16px;
+  }
 }
