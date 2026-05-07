@@ -1,0 +1,120 @@
+# index.html
+
+html
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Padel Event Tracker</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="header">
+        <h1>Padel Event Tracker</h1>
+        <div class="event-counter">Eventos registrados: <span id="event-count">0</span></div>
+    </div>
+
+    <div class="crono-container">
+        <button class="action-btn" id="start-crono">▶</button>
+        <button class="action-btn" id="stop-crono">⏸</button>
+        <button class="action-btn" id="minus-crono">-1s</button>
+        <div id="crono-display">00:00</div>
+        <button class="action-btn" id="plus-crono">+1s</button>
+        <button class="action-btn" id="reset-crono">RESET</button>
+    </div>
+
+    <div class="extra-controls">
+        <select id="server-select">
+            <option value="J1">Saca J1</option>
+            <option value="J2">Saca J2</option>
+            <option value="R1">Saca R1</option>
+            <option value="R2">Saca R2</option>
+        </select>
+
+        <select id="serve-number">
+            <option value="1">1º saque</option>
+            <option value="2">2º saque</option>
+        </select>
+
+        <select id="serve-direction">
+            <option value="">Dirección saque</option>
+            <option value="T">T</option>
+            <option value="CRISTAL">Cristal</option>
+            <option value="CENTRO">Centro</option>
+        </select>
+
+        <input type="number" id="rally-input" min="1" value="1" placeholder="Rally">
+    </div>
+
+    <div class="control-section">
+        <div class="section-title">Jugador</div>
+        <div class="button-group player-buttons">
+            <button class="btn selected" data-player="J1" data-team="OUR">J1</button>
+            <button class="btn" data-player="J2" data-team="OUR">J2</button>
+            <button class="btn" data-player="R1" data-team="RIVAL">R1</button>
+            <button class="btn" data-player="R2" data-team="RIVAL">R2</button>
+        </div>
+    </div>
+
+    <div class="control-section">
+        <div class="section-title">Categoría golpe</div>
+        <select id="stroke-category"></select>
+    </div>
+
+    <div class="control-section">
+        <div class="section-title">Golpe</div>
+        <select id="stroke-subtype"></select>
+    </div>
+
+    <div class="control-section">
+        <div class="section-title">Resultado</div>
+        <div class="button-group outcome-buttons">
+            <button class="btn selected" data-outcome="WINNER">WINNER</button>
+            <button class="btn" data-outcome="FORCED_ERROR">ERROR FORZADO</button>
+            <button class="btn" data-outcome="UNFORCED_ERROR">ERROR NO FORZADO</button>
+        </div>
+    </div>
+
+    <div class="court-container">
+        <div class="padel-court" id="padel-court">
+            <div class="court-lines">
+                <div class="net"></div>
+                <div class="service-lines-x"></div>
+                <div class="service-lines-y"></div>
+            </div>
+        </div>
+
+        <div class="events-table-container">
+            <h3 class="table-title">Eventos Registrados</h3>
+            <div class="table-wrapper">
+                <table id="events-table" class="events-table">
+                    <thead>
+                        <tr>
+                            <th>Punto</th>
+                            <th>Jugador</th>
+                            <th>Golpe</th>
+                            <th>Rally</th>
+                            <th>Crono</th>
+                        </tr>
+                    </thead>
+                    <tbody id="events-table-body">
+                        <tr class="no-events">
+                            <td colspan="5">No hay eventos registrados</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="action-buttons">
+        <button class="action-btn undo-btn" id="undo-btn" disabled>DESHACER</button>
+        <button class="action-btn export-btn" id="export-btn" disabled>EXPORTAR CSV</button>
+    </div>
+
+    <div id="status-message"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>
