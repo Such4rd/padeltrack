@@ -1,53 +1,11 @@
 const STROKES = {
   "Saque": ["saque t", "saque cristal", "resto"],
-
-  "Volea derecha": [
-    "alta paralela",
-    "alta cruzada",
-    "baja paralela",
-    "baja cruzada"
-  ],
-
-  "Volea revés": [
-    "alta paralela",
-    "alta cruzada",
-    "baja paralela",
-    "baja cruzada"
-  ],
-
-  "Derecha": [
-    "cruzada",
-    "paralela",
-    "centro",
-    "globo sin cristal"
-  ],
-
-  "Revés": [
-    "cruzada",
-    "paralela",
-    "centro",
-    "globo sin cristal"
-  ],
-
-  "Esp. fondo": [
-    "bajada derecha",
-    "bajada revés",
-    "chiquita cruzada",
-    "chiquita paralela",
-    "contrarremate",
-    "globo con cristal"
-  ],
-
-  "Esp. red": [
-    "bandeja paralela",
-    "bandeja cruzada",
-    "x3",
-    "remate",
-    "rulo",
-    "dejada",
-    "batalla ataque",
-    "batalla defensa"
-  ]
+  "Volea derecha": ["alta paralela", "alta cruzada", "baja paralela", "baja cruzada"],
+  "Volea revés": ["alta paralela", "alta cruzada", "baja paralela", "baja cruzada"],
+  "Derecha": ["cruzada", "paralela", "centro", "globo sin cristal"],
+  "Revés": ["cruzada", "paralela", "centro", "globo sin cristal"],
+  "Esp. fondo": ["bajada derecha", "bajada revés", "chiquita cruzada", "chiquita paralela", "contrarremate", "globo con cristal"],
+  "Esp. red": ["bandeja paralela", "bandeja cruzada", "x3", "remate", "rulo", "dejada", "batalla ataque", "batalla defensa"]
 };
 
 class PadelEventTracker {
@@ -59,15 +17,11 @@ class PadelEventTracker {
     this.currentOutcome = "UNFORCED_ERROR";
     this.currentRallyRange = "MENOS_3";
 
-    this.playerState = {
-      J1: {
-        category: "Saque",
-        stroke: "saque t"
-      },
-      J2: {
-        category: "Saque",
-        stroke: "saque t"
-      }
+    this.currentStrokeCategory = "Saque";
+
+    this.playerStroke = {
+      J1: "saque t",
+      J2: "saque t"
     };
 
     this.score = {
@@ -90,17 +44,13 @@ class PadelEventTracker {
   }
 
   initStrokePanels() {
-    this.renderPlayerPanel("J1");
-    this.renderPlayerPanel("J2");
+    this.renderCategoryButtons();
+    this.renderStrokeButtons("J1");
+    this.renderStrokeButtons("J2");
   }
 
-  renderPlayerPanel(playerId) {
-    this.renderCategoryButtons(playerId);
-    this.renderStrokeButtons(playerId);
-  }
-
-  renderCategoryButtons(playerId) {
-    const container = document.getElementById(`category-buttons-${playerId.toLowerCase()}`);
+  renderCategoryButtons() {
+    const container = document.getElementById("category-buttons");
     container.innerHTML = "";
 
     Object.keys(STROKES).forEach(category => {
@@ -109,15 +59,19 @@ class PadelEventTracker {
       button.textContent = category;
       button.dataset.category = category;
 
-      if (category === this.playerState[playerId].category) {
+      if (category === this.currentStrokeCategory) {
         button.classList.add("selected");
       }
 
       button.addEventListener("click", () => {
-        this.playerState[playerId].category = category;
-        this.playerState[playerId].stroke = STROKES[category][0];
+        this.currentStrokeCategory = category;
 
-        this.renderPlayerPanel(playerId);
+        this.playerStroke.J1 = STROKES[category][0];
+        this.playerStroke.J2 = STROKES[category][0];
+
+        this.renderCategoryButtons();
+        this.renderStrokeButtons("J1");
+        this.renderStrokeButtons("J2");
       });
 
       container.appendChild(button);
@@ -128,28 +82,25 @@ class PadelEventTracker {
     const container = document.getElementById(`stroke-buttons-${playerId.toLowerCase()}`);
     container.innerHTML = "";
 
-    const category = this.playerState[playerId].category;
-
-    STROKES[category].forEach(stroke => {
+    STROKES[this.currentStrokeCategory].forEach(stroke => {
       const button = document.createElement("button");
       button.className = "stroke-btn";
       button.textContent = stroke;
-      button.dataset.stroke = stroke;
 
-      if (stroke === this.playerState[playerId].stroke) {
+      if (stroke === this.playerStroke[playerId]) {
         button.classList.add("selected");
       }
 
       button.addEventListener("click", () => {
-        this.playerState[playerId].stroke = stroke;
+        this.playerStroke[playerId] = stroke;
         this.renderStrokeButtons(playerId);
 
         if (!this.shouldRegisterByZone()) {
           this.registerPoint({
             zone: "",
-            playerId: playerId,
-            category: category,
-            stroke: stroke
+            playerId,
+            category: this.currentStrokeCategory,
+            stroke
           });
         }
       });
@@ -159,20 +110,8 @@ class PadelEventTracker {
   }
 
   initServiceToggles() {
-    const serverValues = ["J1", "J2", "R1", "R2"];
-    const serveNumberValues = ["1", "2"];
-
-    this.setupToggleButton(
-      "server-toggle",
-      serverValues,
-      value => `Saca ${value}`
-    );
-
-    this.setupToggleButton(
-      "serve-number-toggle",
-      serveNumberValues,
-      value => `${value}º`
-    );
+    this.setupToggleButton("server-toggle", ["J1", "J2", "R1", "R2"], value => `Saca ${value}`);
+    this.setupToggleButton("serve-number-toggle", ["1", "2"], value => `${value}º`);
   }
 
   setupToggleButton(buttonId, values, labelFormatter) {
@@ -181,8 +120,7 @@ class PadelEventTracker {
     button.addEventListener("click", () => {
       const currentValue = button.dataset.value;
       const currentIndex = values.indexOf(currentValue);
-      const nextIndex = (currentIndex + 1) % values.length;
-      const nextValue = values[nextIndex];
+      const nextValue = values[(currentIndex + 1) % values.length];
 
       button.dataset.value = nextValue;
       button.textContent = labelFormatter(nextValue);
@@ -272,11 +210,7 @@ class PadelEventTracker {
   }
 
   toggleCrono() {
-    if (this.cronoRunning) {
-      this.stopCrono();
-    } else {
-      this.startCrono();
-    }
+    this.cronoRunning ? this.stopCrono() : this.startCrono();
   }
 
   startCrono() {
@@ -320,12 +254,7 @@ class PadelEventTracker {
   }
 
   addScorePoint(winner) {
-    if (winner === "OUR") {
-      this.score.ourPoints++;
-    } else {
-      this.score.rivalPoints++;
-    }
-
+    winner === "OUR" ? this.score.ourPoints++ : this.score.rivalPoints++;
     this.normalizeGameScore();
   }
 
@@ -347,11 +276,7 @@ class PadelEventTracker {
   }
 
   winGame(team) {
-    if (team === "OUR") {
-      this.score.ourGames++;
-    } else {
-      this.score.rivalGames++;
-    }
+    team === "OUR" ? this.score.ourGames++ : this.score.rivalGames++;
 
     this.score.ourPoints = 0;
     this.score.rivalPoints = 0;
@@ -366,9 +291,11 @@ class PadelEventTracker {
 
     if (own >= 3 && other >= 3) {
       if (own === other) return "40";
+
       if (this.getDeuceMode() === "ADVANTAGE") {
         return own > other ? "AD" : "40";
       }
+
       return "40";
     }
 
