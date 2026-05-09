@@ -59,6 +59,7 @@ class PadelEventTracker {
     this.currentTeam = "OUR";
     this.currentPointResult = "WON";
     this.currentOutcome = "UNFORCED_ERROR";
+    this.currentRallyRange = "MENOS_3";
 
     this.currentStrokeCategory = "Saque";
     this.currentStrokeType = "saque t";
@@ -79,10 +80,12 @@ class PadelEventTracker {
 
     this.initStrokeButtons();
     this.initEvents();
+    this.initServiceToggles();
     this.updateUI();
     this.updateStrokeCount();
     this.renderScore();
     this.renderSelectedStroke();
+    this.updateVisibleRegisterMode();
   }
 
   initStrokeButtons() {
@@ -142,6 +145,10 @@ class PadelEventTracker {
         this.renderStrokeButtons();
         this.renderSelectedStroke();
         this.updateStrokeCount();
+
+        if (!this.shouldRegisterByZone()) {
+          this.registerPoint("");
+        }
       });
 
       this.strokeButtons.appendChild(button);
@@ -153,12 +160,49 @@ class PadelEventTracker {
       `${this.currentStrokeCategory} · ${this.currentStrokeType}`;
   }
 
+  initServiceToggles() {
+    const serverValues = ["J1", "J2", "R1", "R2"];
+    const serveNumberValues = ["1", "2"];
+
+    this.setupToggleButton(
+      "server-toggle",
+      serverValues,
+      value => `Saca ${value}`
+    );
+
+    this.setupToggleButton(
+      "serve-number-toggle",
+      serveNumberValues,
+      value => `${value}º`
+    );
+  }
+
+  setupToggleButton(buttonId, values, labelFormatter) {
+    const button = document.getElementById(buttonId);
+
+    button.addEventListener("click", () => {
+      const currentValue = button.dataset.value;
+      const currentIndex = values.indexOf(currentValue);
+      const nextIndex = (currentIndex + 1) % values.length;
+      const nextValue = values[nextIndex];
+
+      button.dataset.value = nextValue;
+      button.textContent = labelFormatter(nextValue);
+      button.classList.add("active");
+    });
+  }
+
+  getServiceValue(buttonId) {
+    return document.getElementById(buttonId).dataset.value;
+  }
+
   initEvents() {
     document.querySelectorAll("[data-point-result]").forEach(button => {
       button.addEventListener("click", () => {
         this.currentPointResult = button.dataset.pointResult;
         this.setSelected("[data-point-result]", button);
         this.updateStrokeCount();
+        this.updateVisibleRegisterMode();
       });
     });
 
@@ -176,12 +220,22 @@ class PadelEventTracker {
         this.currentOutcome = button.dataset.outcome;
         this.setSelected("[data-outcome]", button);
         this.updateStrokeCount();
+        this.updateVisibleRegisterMode();
+      });
+    });
+
+    document.querySelectorAll("[data-rally]").forEach(button => {
+      button.addEventListener("click", () => {
+        this.currentRallyRange = button.dataset.rally;
+        this.setSelected("[data-rally]", button);
       });
     });
 
     document.querySelectorAll(".court-zone").forEach(zone => {
       zone.addEventListener("click", () => {
-        this.registerPoint(zone.dataset.zone);
+        if (this.shouldRegisterByZone()) {
+          this.registerPoint(zone.dataset.zone);
+        }
       });
     });
 
@@ -190,9 +244,6 @@ class PadelEventTracker {
     document.getElementById("plus-crono").addEventListener("click", () => this.modifyCrono(5));
     document.getElementById("reset-crono").addEventListener("click", () => this.resetCrono());
 
-    document.getElementById("minus-rally").addEventListener("click", () => this.modifyRally(-1));
-    document.getElementById("plus-rally").addEventListener("click", () => this.modifyRally(1));
-
     document.getElementById("undo-btn").addEventListener("click", () => this.undoLastEvent());
     document.getElementById("export-btn").addEventListener("click", () => this.exportCSV());
 
@@ -200,6 +251,24 @@ class PadelEventTracker {
       this.recalculateScore();
       this.renderScore();
     });
+  }
+
+  shouldRegisterByZone() {
+    return this.currentPointResult === "WON" &&
+      this.currentOutcome === "UNFORCED_ERROR";
+  }
+
+  updateVisibleRegisterMode() {
+    const strokeArea = document.getElementById("stroke-area");
+    const zoneArea = document.getElementById("zone-area");
+
+    if (this.shouldRegisterByZone()) {
+      strokeArea.classList.add("hidden");
+      zoneArea.classList.remove("hidden");
+    } else {
+      strokeArea.classList.remove("hidden");
+      zoneArea.classList.add("hidden");
+    }
   }
 
   setSelected(selector, selectedButton) {
@@ -252,12 +321,6 @@ class PadelEventTracker {
     const seconds = String(this.cronoSegundos % 60).padStart(2, "0");
 
     document.getElementById("crono-display").textContent = `${minutes}:${seconds}`;
-  }
-
-  modifyRally(value) {
-    const input = document.getElementById("rally-input");
-    const current = Number(input.value || 1);
-    input.value = Math.max(1, current + value);
   }
 
   getDeuceMode() {
@@ -368,13 +431,13 @@ class PadelEventTracker {
       point_result: this.currentPointResult,
       player_id: this.currentPlayer,
       player_team: this.currentTeam,
-      stroke_category: this.currentStrokeCategory,
-      stroke_type: this.currentStrokeType,
+      stroke_category: this.shouldRegisterByZone() ? "" : this.currentStrokeCategory,
+      stroke_type: this.shouldRegisterByZone() ? "" : this.currentStrokeType,
       outcome: this.currentOutcome,
-      rally: document.getElementById("rally-input").value,
-      server: document.getElementById("server-select").value,
-      serve_number: document.getElementById("serve-number").value,
-      serve_direction: document.getElementById("serve-direction").value,
+      rally: this.currentRallyRange,
+      server: this.getServiceValue("server-toggle"),
+      serve_number: this.getServiceValue("serve-number-toggle"),
+      serve_direction: "",
       court_zone: zone,
       point_duration_seconds: this.cronoSegundos,
       deuce_mode: this.getDeuceMode(),
@@ -418,7 +481,7 @@ class PadelEventTracker {
     }
 
     lastEventBox.textContent =
-      `P${lastEvent.point_id} · ${lastEvent.point_result} · ${lastEvent.player_id} · ${lastEvent.stroke_type} · ${lastEvent.outcome} · ${lastEvent.court_zone} · ${lastEvent.our_games_after}-${lastEvent.rival_games_after}`;
+      `P${lastEvent.point_id} · ${lastEvent.point_result} · ${lastEvent.player_id} · ${lastEvent.outcome} · ${lastEvent.stroke_type || lastEvent.court_zone} · ${lastEvent.our_games_after}-${lastEvent.rival_games_after}`;
   }
 
   exportCSV() {
