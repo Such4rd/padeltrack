@@ -60,7 +60,8 @@ select {
   width: 100%;
 }
 
-/* MARCADOR MÁS COMPACTO */
+/* MARCADOR */
+
 .header-row {
   display: grid;
   grid-template-columns: 1fr 74px;
@@ -98,7 +99,8 @@ select {
   font-size: 11px;
 }
 
-/* CRONO COMPACTO */
+/* CRONO */
+
 .crono-row {
   display: grid;
   grid-template-columns: 38px 1fr 44px 44px;
@@ -119,10 +121,32 @@ select {
 }
 
 /* SERVICIO Y RALLY */
+
 .service-rally-row {
   display: grid;
-  grid-template-columns: 1.15fr 0.5fr 0.55fr 0.65fr 0.55fr;
+  grid-template-columns: 1fr 1px 1fr;
+  gap: 6px;
+  align-items: center;
+}
+
+.service-group {
+  display: grid;
+  grid-template-columns: 1.2fr 0.5fr;
   gap: 4px;
+}
+
+.rally-group {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 4px;
+}
+
+.service-divider {
+  width: 1px;
+  height: 28px;
+  background: #2f5f93;
+  justify-self: center;
+  border-radius: 999px;
 }
 
 .blue-block button {
@@ -141,7 +165,13 @@ select {
   color: #fff;
 }
 
+.service-rally-row .btn.selected {
+  background: #1565c0;
+  border-color: #1565c0;
+}
+
 /* RESULTADO */
+
 .point-result-row {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -168,11 +198,6 @@ select {
   border-color: #b64040;
 }
 
-.service-rally-row .btn.selected {
-  background: #1565c0;
-  border-color: #1565c0;
-}
-
 .btn.selected.nf {
   background: #b64040;
   border-color: #b64040;
@@ -188,7 +213,8 @@ select {
   border-color: #4caf50;
 }
 
-/* PANELES JUGADORES */
+/* JUGADORES */
+
 #players-stroke-area {
   display: grid;
   grid-template-columns: 1fr;
@@ -251,7 +277,8 @@ select {
   border-color: #4da3ff;
 }
 
-/* CATEGORÍAS Y GOLPES */
+/* GOLPES */
+
 .category-buttons {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -262,16 +289,17 @@ select {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 3px;
-  max-height: none;
-  overflow: visible;
+  max-height: none !important;
+  overflow: visible !important;
 }
 
 .category-btn,
 .stroke-btn {
-  height: 28px;
-  font-size: 9px;
-  line-height: 1;
-  padding: 1px 3px;
+  height: 24px !important;
+  min-height: 24px !important;
+  font-size: 8px !important;
+  line-height: 0.95;
+  padding: 1px 2px;
 }
 
 .category-btn.selected,
@@ -286,6 +314,7 @@ select {
 }
 
 /* PISTA */
+
 .court {
   height: 56px;
   display: grid;
@@ -313,6 +342,8 @@ select {
 .hidden {
   display: none !important;
 }
+
+/* FOOTER */
 
 .last-event {
   min-height: 24px;
@@ -348,6 +379,7 @@ button:disabled {
 }
 
 @media (max-width: 390px) {
+
   body {
     padding: 3px;
   }
@@ -390,7 +422,11 @@ button:disabled {
   }
 
   .service-rally-row {
-    grid-template-columns: 1.1fr 0.45fr 0.5fr 0.6fr 0.5fr;
+    gap: 4px;
+  }
+
+  .service-divider {
+    height: 24px;
   }
 
   .category-buttons {
@@ -403,8 +439,10 @@ button:disabled {
 
   .category-btn,
   .stroke-btn {
-    height: 25px;
-    font-size: 8.4px;
+    height: 23px !important;
+    min-height: 23px !important;
+    font-size: 7.8px !important;
+    padding: 1px 2px;
   }
 
   .player-title {
