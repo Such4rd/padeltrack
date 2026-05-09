@@ -42,14 +42,14 @@
     <button id="plus-crono">+5s</button>
   </section>
 
-  <div class="section-label">SERVICIO Y RALLY</div>
+  <div class="section-label blue-label">SERVICIO Y RALLY</div>
 
-  <section class="service-row">
+  <section class="service-row blue-block">
     <button id="server-toggle" class="toggle-btn active" data-value="J1">Saca J1</button>
     <button id="serve-number-toggle" class="toggle-btn active" data-value="1">1º</button>
   </section>
 
-  <section class="rally-row">
+  <section class="rally-row blue-block">
     <button class="btn selected" data-rally="MENOS_3">&lt; 3</button>
     <button class="btn" data-rally="ENTRE_3_6">3 - 6</button>
     <button class="btn" data-rally="MAS_6">&gt; 6</button>
@@ -62,13 +62,6 @@
     <button class="btn lost" data-point-result="LOST">Perdido</button>
   </section>
 
-  <div class="section-label">JUGADOR</div>
-
-  <section class="players-row two-players">
-    <button class="btn selected" data-player="J1" data-team="OUR">J1</button>
-    <button class="btn" data-player="J2" data-team="OUR">J2</button>
-  </section>
-
   <div class="section-label">TIPO FINAL</div>
 
   <section class="outcome-row">
@@ -77,20 +70,23 @@
     <button class="btn w" data-outcome="WINNER">W</button>
   </section>
 
-  <section id="stroke-area">
+  <section id="players-stroke-area">
 
-    <div class="section-label">CATEGORÍA GOLPE</div>
+    <div class="player-panel player-j1">
+      <div class="player-title">J1 · Golpe</div>
 
-    <section class="category-buttons" id="category-buttons"></section>
+      <section class="category-buttons" id="category-buttons-j1"></section>
 
-    <div class="section-label">GOLPE</div>
+      <section class="stroke-buttons" id="stroke-buttons-j1"></section>
+    </div>
 
-    <section class="stroke-buttons" id="stroke-buttons"></section>
+    <div class="player-panel player-j2">
+      <div class="player-title">J2 · Golpe</div>
 
-    <section class="golpe-row">
-      <div id="selected-stroke">Saque · saque t</div>
-      <div id="stroke-count">0</div>
-    </section>
+      <section class="category-buttons" id="category-buttons-j2"></section>
+
+      <section class="stroke-buttons" id="stroke-buttons-j2"></section>
+    </div>
 
   </section>
 
