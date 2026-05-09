@@ -3,7 +3,7 @@ const STROKES = {
   "Volea derecha": ["alta paralela", "alta cruzada", "baja paralela", "baja cruzada"],
   "Volea revés": ["alta paralela", "alta cruzada", "baja paralela", "baja cruzada"],
   "Derecha": ["cruzada", "paralela", "centro", "globo sin cristal"],
-  "Revés": ["alta paralela", "alta cruzada", "baja paralela", "baja cruzada"],
+  "Revés": ["cruzada", "paralela", "centro", "globo sin cristal"],
   "Esp. fondo": ["bajada derecha", "bajada revés", "chiquita cruzada", "chiquita paralela", "contrarremate", "globo con cristal"],
   "Esp. red": ["bandeja paralela", "bandeja cruzada", "x3", "remate", "rulo", "dejada", "batalla ataque", "batalla defensa"]
 };
