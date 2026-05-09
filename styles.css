@@ -12,7 +12,7 @@ body {
 }
 
 body {
-  padding: 6px;
+  padding: 4px;
 }
 
 .app {
@@ -21,16 +21,16 @@ body {
   margin: 0 auto;
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 4px;
 }
 
 .section-label {
-  margin-top: 2px;
-  padding-top: 4px;
+  margin-top: 1px;
+  padding-top: 2px;
   border-top: 1px solid #2f2f2f;
-  font-size: 10px;
+  font-size: 9px;
   font-weight: 800;
-  letter-spacing: 0.8px;
+  letter-spacing: 0.7px;
   color: #7a7a7a;
   padding-left: 2px;
 }
@@ -42,13 +42,13 @@ body {
 
 button,
 select {
-  height: 36px;
+  height: 32px;
   border: 1px solid #444;
-  border-radius: 8px;
+  border-radius: 7px;
   background: #222;
   color: #fff;
-  font-size: 13px;
-  padding: 0 6px;
+  font-size: 12px;
+  padding: 0 5px;
 }
 
 button {
@@ -60,65 +60,69 @@ select {
   width: 100%;
 }
 
+/* MARCADOR MÁS COMPACTO */
 .header-row {
   display: grid;
-  grid-template-columns: 1fr 86px;
-  gap: 6px;
+  grid-template-columns: 1fr 74px;
+  gap: 4px;
 }
 
 .scoreboard {
-  height: 70px;
+  height: 46px;
   background: #181818;
   border: 1px solid #333;
-  border-radius: 8px;
-  padding: 6px 10px;
+  border-radius: 7px;
+  padding: 3px 8px;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: 4px;
+  gap: 1px;
 }
 
 .score-line {
   display: grid;
-  grid-template-columns: 1fr 34px 44px;
+  grid-template-columns: 1fr 28px 36px;
   align-items: center;
-  font-size: 15px;
+  font-size: 12px;
 }
 
 .score-line strong {
   text-align: center;
-  font-size: 21px;
+  font-size: 17px;
   color: #4caf50;
 }
 
 #deuce-mode {
-  height: 70px;
+  height: 46px;
   font-weight: 800;
+  font-size: 11px;
 }
 
+/* CRONO COMPACTO */
 .crono-row {
   display: grid;
-  grid-template-columns: 46px 1fr 56px 56px;
-  gap: 5px;
+  grid-template-columns: 38px 1fr 44px 44px;
+  gap: 4px;
 }
 
 #crono-display {
-  height: 36px;
+  height: 32px;
   display: flex;
   align-items: center;
   justify-content: center;
   color: #4caf50;
-  font-size: 24px;
+  font-size: 20px;
   font-weight: 900;
   background: #181818;
-  border-radius: 8px;
+  border-radius: 7px;
   border: 1px solid #333;
 }
 
+/* SERVICIO Y RALLY */
 .service-rally-row {
   display: grid;
-  grid-template-columns: 1.25fr 0.55fr 0.65fr 0.75fr 0.65fr;
-  gap: 5px;
+  grid-template-columns: 1.15fr 0.5fr 0.55fr 0.65fr 0.55fr;
+  gap: 4px;
 }
 
 .blue-block button {
@@ -137,16 +141,17 @@ select {
   color: #fff;
 }
 
+/* RESULTADO */
 .point-result-row {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 5px;
+  gap: 4px;
 }
 
 .outcome-row {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 5px;
+  gap: 4px;
 }
 
 .btn.selected {
@@ -183,16 +188,17 @@ select {
   border-color: #4caf50;
 }
 
+/* PANELES JUGADORES */
 #players-stroke-area {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 6px;
+  gap: 4px;
 }
 
 .player-panel {
   border: 1px solid #333;
-  border-radius: 10px;
-  padding: 5px;
+  border-radius: 8px;
+  padding: 4px;
   background: #171717;
 }
 
@@ -206,25 +212,25 @@ select {
 
 .player-title {
   display: grid;
-  grid-template-columns: 1fr 34px;
+  grid-template-columns: 1fr 30px;
   align-items: center;
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 900;
-  letter-spacing: 0.6px;
-  margin-bottom: 4px;
-  padding-bottom: 4px;
+  letter-spacing: 0.5px;
+  margin-bottom: 3px;
+  padding-bottom: 3px;
   border-bottom: 1px solid #333;
 }
 
 .player-title strong {
-  height: 24px;
-  border-radius: 6px;
+  height: 20px;
+  border-radius: 5px;
   background: #111;
   border: 1px solid #333;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 12px;
+  font-size: 11px;
 }
 
 .player-j1 .player-title {
@@ -245,26 +251,27 @@ select {
   border-color: #4da3ff;
 }
 
+/* CATEGORÍAS Y GOLPES */
 .category-buttons {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 4px;
+  gap: 3px;
 }
 
 .stroke-buttons {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 4px;
-  max-height: 74px;
-  overflow-y: auto;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 3px;
+  max-height: none;
+  overflow: visible;
 }
 
 .category-btn,
 .stroke-btn {
-  height: 32px;
-  font-size: 10px;
-  line-height: 1.05;
-  padding: 2px 4px;
+  height: 28px;
+  font-size: 9px;
+  line-height: 1;
+  padding: 1px 3px;
 }
 
 .category-btn.selected,
@@ -278,15 +285,16 @@ select {
   border-color: #1565c0;
 }
 
+/* PISTA */
 .court {
-  height: 68px;
+  height: 56px;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 5px;
+  gap: 4px;
   background: #0b3d26;
-  border: 3px solid #fff;
-  border-radius: 10px;
-  padding: 5px;
+  border: 2px solid #fff;
+  border-radius: 8px;
+  padding: 4px;
 }
 
 .court-zone {
@@ -294,7 +302,7 @@ select {
   border-radius: 6px;
   border: 1px solid rgba(255,255,255,0.8);
   background: rgba(76, 175, 80, 0.25);
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 900;
 }
 
@@ -307,12 +315,12 @@ select {
 }
 
 .last-event {
-  min-height: 28px;
-  padding: 6px 8px;
+  min-height: 24px;
+  padding: 4px 6px;
   background: #1b1b1b;
   border: 1px solid #333;
-  border-radius: 8px;
-  font-size: 12px;
+  border-radius: 7px;
+  font-size: 11px;
   color: #ddd;
   white-space: nowrap;
   overflow: hidden;
@@ -321,10 +329,10 @@ select {
 
 .bottom-row {
   display: grid;
-  grid-template-columns: 1fr 56px 56px 56px;
-  gap: 5px;
+  grid-template-columns: 1fr 48px 48px 48px;
+  gap: 4px;
   align-items: center;
-  font-size: 13px;
+  font-size: 12px;
 }
 
 #undo-btn {
@@ -340,41 +348,49 @@ button:disabled {
 }
 
 @media (max-width: 390px) {
+  body {
+    padding: 3px;
+  }
+
+  .app {
+    gap: 3px;
+  }
+
   button,
   select {
-    height: 33px;
-    font-size: 11px;
+    height: 29px;
+    font-size: 10px;
   }
 
   .header-row {
-    grid-template-columns: 1fr 74px;
+    grid-template-columns: 1fr 66px;
   }
 
   .scoreboard,
   #deuce-mode {
-    height: 64px;
+    height: 42px;
   }
 
   .score-line {
-    font-size: 12px;
-    grid-template-columns: 1fr 26px 36px;
+    font-size: 11px;
+    grid-template-columns: 1fr 24px 32px;
   }
 
   .score-line strong {
-    font-size: 18px;
-  }
-
-  #crono-display {
-    height: 33px;
-    font-size: 20px;
+    font-size: 15px;
   }
 
   .crono-row {
-    grid-template-columns: 40px 1fr 46px 46px;
+    grid-template-columns: 36px 1fr 40px 40px;
+  }
+
+  #crono-display {
+    height: 29px;
+    font-size: 18px;
   }
 
   .service-rally-row {
-    grid-template-columns: 1.2fr 0.5fr 0.55fr 0.65fr 0.55fr;
+    grid-template-columns: 1.1fr 0.45fr 0.5fr 0.6fr 0.5fr;
   }
 
   .category-buttons {
@@ -382,21 +398,24 @@ button:disabled {
   }
 
   .stroke-buttons {
-    grid-template-columns: repeat(3, 1fr);
-    max-height: 68px;
+    grid-template-columns: repeat(4, 1fr);
   }
 
   .category-btn,
   .stroke-btn {
-    height: 30px;
+    height: 25px;
+    font-size: 8.4px;
+  }
+
+  .player-title {
     font-size: 9.5px;
   }
 
   .court {
-    height: 60px;
+    height: 52px;
   }
 
   .bottom-row {
-    grid-template-columns: 1fr 50px 50px 50px;
+    grid-template-columns: 1fr 44px 44px 44px;
   }
 }
