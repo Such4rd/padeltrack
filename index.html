@@ -19,13 +19,7 @@
 
 <main class="app">
 
-  <!-- ========================= -->
-  <!-- MARCADOR -->
-  <!-- ========================= -->
-
-  <div class="section-label">
-    MARCADOR
-  </div>
+  <div class="section-label">MARCADOR</div>
 
   <section class="header-row">
 
@@ -33,79 +27,42 @@
 
       <div class="score-line">
         <span>Nosotros</span>
-
-        <strong id="our-games">
-          0
-        </strong>
-
-        <strong id="our-points">
-          0
-        </strong>
+        <strong id="our-games">0</strong>
+        <strong id="our-points">0</strong>
       </div>
 
       <div class="score-line">
         <span>Rivales</span>
-
-        <strong id="rival-games">
-          0
-        </strong>
-
-        <strong id="rival-points">
-          0
-        </strong>
+        <strong id="rival-games">0</strong>
+        <strong id="rival-points">0</strong>
       </div>
 
     </div>
 
     <select id="deuce-mode">
-      <option value="ADVANTAGE">
-        Ventajas
-      </option>
-
-      <option value="GOLDEN_POINT">
-        P. oro
-      </option>
+      <option value="ADVANTAGE">Ventajas</option>
+      <option value="GOLDEN_POINT">P. oro</option>
     </select>
 
   </section>
 
-  <!-- ========================= -->
-  <!-- CRONO -->
-  <!-- ========================= -->
-
-  <div class="section-label">
-    CRONÓMETRO
-  </div>
+  <div class="section-label">CRONÓMETRO</div>
 
   <section class="crono-row">
 
-    <button id="toggle-crono">
-      ▶
-    </button>
+    <button id="toggle-crono">▶</button>
 
-    <div id="crono-display">
-      00:00
-    </div>
+    <div id="crono-display">00:00</div>
 
-    <button id="minus-crono">
-      -5s
-    </button>
+    <button id="minus-crono">-5s</button>
 
-    <button id="plus-crono">
-      +5s
-    </button>
+    <button id="plus-crono">+5s</button>
 
   </section>
 
-  <!-- ========================= -->
-  <!-- SERVICIO -->
-  <!-- ========================= -->
+  <div class="section-label blue-label">SERVICIO Y RALLY</div>
 
-  <div class="section-label blue-label">
-    SERVICIO Y RALLY
-  </div>
-
-  <section class="service-row blue-block">
+  <section class="service-rally-row blue-block">
 
     <button
       id="server-toggle"
@@ -123,40 +80,30 @@
       1º
     </button>
 
-  </section>
-
-  <section class="rally-row blue-block">
-
     <button
       class="btn selected"
       data-rally="MENOS_3"
     >
-      &lt; 3
+      &lt;3
     </button>
 
     <button
       class="btn"
       data-rally="ENTRE_3_6"
     >
-      3 - 6
+      3-6
     </button>
 
     <button
       class="btn"
       data-rally="MAS_6"
     >
-      &gt; 6
+      &gt;6
     </button>
 
   </section>
 
-  <!-- ========================= -->
-  <!-- RESULTADO -->
-  <!-- ========================= -->
-
-  <div class="section-label">
-    RESULTADO DEL PUNTO
-  </div>
+  <div class="section-label">RESULTADO DEL PUNTO</div>
 
   <section class="point-result-row">
 
@@ -176,13 +123,7 @@
 
   </section>
 
-  <!-- ========================= -->
-  <!-- TIPO FINAL -->
-  <!-- ========================= -->
-
-  <div class="section-label">
-    TIPO FINAL
-  </div>
+  <div class="section-label">TIPO FINAL</div>
 
   <section class="outcome-row">
 
@@ -209,29 +150,20 @@
 
   </section>
 
-  <!-- ========================= -->
-  <!-- GOLPES -->
-  <!-- ========================= -->
-
   <section id="players-stroke-area">
 
-    <div class="section-label">
-      CATEGORÍA GOLPE
-    </div>
+    <div class="section-label">CATEGORÍA GOLPE</div>
 
     <section
       class="category-buttons"
       id="category-buttons"
     ></section>
 
-    <!-- ========================= -->
-    <!-- J1 -->
-    <!-- ========================= -->
-
     <div class="player-panel player-j1">
 
       <div class="player-title">
-        J1 · Golpe
+        <span>J1 · Golpe</span>
+        <strong id="stroke-count-j1">0</strong>
       </div>
 
       <section
@@ -241,14 +173,11 @@
 
     </div>
 
-    <!-- ========================= -->
-    <!-- J2 -->
-    <!-- ========================= -->
-
     <div class="player-panel player-j2">
 
       <div class="player-title">
-        J2 · Golpe
+        <span>J2 · Golpe</span>
+        <strong id="stroke-count-j2">0</strong>
       </div>
 
       <section
@@ -260,15 +189,9 @@
 
   </section>
 
-  <!-- ========================= -->
-  <!-- ZONA -->
-  <!-- ========================= -->
-
   <section id="zone-area">
 
-    <div class="section-label">
-      ZONA EN PISTA
-    </div>
+    <div class="section-label">ZONA EN PISTA</div>
 
     <section
       class="court"
@@ -300,10 +223,6 @@
 
   </section>
 
-  <!-- ========================= -->
-  <!-- ÚLTIMO EVENTO -->
-  <!-- ========================= -->
-
   <section
     class="last-event"
     id="last-event"
@@ -311,22 +230,14 @@
     Sin eventos
   </section>
 
-  <!-- ========================= -->
-  <!-- BOTONES -->
-  <!-- ========================= -->
-
   <section class="bottom-row">
 
     <span>
       Eventos:
-      <strong id="event-count">
-        0
-      </strong>
+      <strong id="event-count">0</strong>
     </span>
 
-    <button id="reset-crono">
-      Reset
-    </button>
+    <button id="reset-crono">Reset</button>
 
     <button
       id="undo-btn"
