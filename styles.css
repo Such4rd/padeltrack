@@ -36,8 +36,7 @@ body {
 }
 
 button,
-select,
-input {
+select {
   height: 36px;
   border: 1px solid #444;
   border-radius: 8px;
@@ -52,8 +51,7 @@ button {
   font-weight: 700;
 }
 
-select,
-input {
+select {
   width: 100%;
 }
 
@@ -112,21 +110,17 @@ input {
   border: 1px solid #333;
 }
 
-.top-row {
+.service-row {
   display: grid;
-  grid-template-columns: 1.25fr 0.55fr 0.75fr 1fr;
+  grid-template-columns: 1fr 1fr;
   gap: 5px;
 }
 
-.rally-box {
+.rally-row,
+.outcome-row {
   display: grid;
-  grid-template-columns: 30px 1fr 30px;
-  gap: 3px;
-}
-
-.rally-box input {
-  text-align: center;
-  padding: 0;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 5px;
 }
 
 .point-result-row,
@@ -136,10 +130,16 @@ input {
   gap: 5px;
 }
 
-.outcome-row {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 5px;
+.toggle-btn {
+  background: #181818;
+  border-color: #444;
+  white-space: nowrap;
+}
+
+.toggle-btn.active {
+  background: #4caf50;
+  border-color: #4caf50;
+  color: #fff;
 }
 
 .category-buttons {
@@ -189,6 +189,11 @@ input {
   border-color: #4caf50;
 }
 
+.rally-row .btn.selected {
+  background: #4caf50;
+  border-color: #4caf50;
+}
+
 .btn.selected.nf {
   background: #b64040;
   border-color: #b64040;
@@ -208,6 +213,7 @@ input {
   display: grid;
   grid-template-columns: 1fr 50px;
   gap: 5px;
+  margin-top: 4px;
 }
 
 #selected-stroke,
@@ -260,6 +266,10 @@ input {
   background: #4caf50;
 }
 
+.hidden {
+  display: none !important;
+}
+
 .last-event {
   min-height: 28px;
   padding: 6px 8px;
@@ -295,8 +305,7 @@ button:disabled {
 
 @media (max-width: 390px) {
   button,
-  select,
-  input {
+  select {
     height: 33px;
     font-size: 11px;
   }
