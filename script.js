@@ -3,7 +3,7 @@ const STROKES = {
   "Volea derecha": ["alta paralela", "alta cruzada", "baja paralela", "baja cruzada"],
   "Volea revés": ["alta paralela", "alta cruzada", "baja paralela", "baja cruzada"],
   "Derecha": ["cruzada", "paralela", "centro", "globo sin cristal"],
-  "Revés": ["cruzada", "paralela", "centro", "globo sin cristal"],
+  "Revés": ["alta paralela", "alta cruzada", "baja paralela", "baja cruzada"],
   "Esp. fondo": ["bajada derecha", "bajada revés", "chiquita cruzada", "chiquita paralela", "contrarremate", "globo con cristal"],
   "Esp. red": ["bandeja paralela", "bandeja cruzada", "x3", "remate", "rulo", "dejada", "batalla ataque", "batalla defensa"]
 };
@@ -41,6 +41,8 @@ class PadelEventTracker {
     this.updateUI();
     this.renderScore();
     this.updateVisibleRegisterMode();
+    this.updatePlayerStrokeCount("J1");
+    this.updatePlayerStrokeCount("J2");
   }
 
   initStrokePanels() {
@@ -72,6 +74,8 @@ class PadelEventTracker {
         this.renderCategoryButtons();
         this.renderStrokeButtons("J1");
         this.renderStrokeButtons("J2");
+        this.updatePlayerStrokeCount("J1");
+        this.updatePlayerStrokeCount("J2");
       });
 
       container.appendChild(button);
@@ -94,6 +98,7 @@ class PadelEventTracker {
       button.addEventListener("click", () => {
         this.playerStroke[playerId] = stroke;
         this.renderStrokeButtons(playerId);
+        this.updatePlayerStrokeCount(playerId);
 
         if (!this.shouldRegisterByZone()) {
           this.registerPoint({
@@ -109,9 +114,32 @@ class PadelEventTracker {
     });
   }
 
+  updatePlayerStrokeCount(playerId) {
+    const selectedStroke = this.playerStroke[playerId];
+
+    const count = this.events.filter(event =>
+      event.player_id === playerId &&
+      event.stroke_category === this.currentStrokeCategory &&
+      event.stroke_type === selectedStroke &&
+      event.point_result === this.currentPointResult &&
+      event.outcome === this.currentOutcome
+    ).length;
+
+    document.getElementById(`stroke-count-${playerId.toLowerCase()}`).textContent = count;
+  }
+
   initServiceToggles() {
-    this.setupToggleButton("server-toggle", ["J1", "J2", "R1", "R2"], value => `Saca ${value}`);
-    this.setupToggleButton("serve-number-toggle", ["1", "2"], value => `${value}º`);
+    this.setupToggleButton(
+      "server-toggle",
+      ["J1", "J2", "R1", "R2"],
+      value => `Saca ${value}`
+    );
+
+    this.setupToggleButton(
+      "serve-number-toggle",
+      ["1", "2"],
+      value => `${value}º`
+    );
   }
 
   setupToggleButton(buttonId, values, labelFormatter) {
@@ -138,6 +166,8 @@ class PadelEventTracker {
         this.currentPointResult = button.dataset.pointResult;
         this.setSelected("[data-point-result]", button);
         this.updateVisibleRegisterMode();
+        this.updatePlayerStrokeCount("J1");
+        this.updatePlayerStrokeCount("J2");
       });
     });
 
@@ -146,6 +176,8 @@ class PadelEventTracker {
         this.currentOutcome = button.dataset.outcome;
         this.setSelected("[data-outcome]", button);
         this.updateVisibleRegisterMode();
+        this.updatePlayerStrokeCount("J1");
+        this.updatePlayerStrokeCount("J2");
       });
     });
 
@@ -359,6 +391,8 @@ class PadelEventTracker {
 
     this.updateUI();
     this.renderScore();
+    this.updatePlayerStrokeCount("J1");
+    this.updatePlayerStrokeCount("J2");
   }
 
   undoLastEvent() {
@@ -370,6 +404,8 @@ class PadelEventTracker {
     this.recalculateScore();
     this.updateUI();
     this.renderScore();
+    this.updatePlayerStrokeCount("J1");
+    this.updatePlayerStrokeCount("J2");
   }
 
   updateUI() {
