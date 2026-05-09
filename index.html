@@ -37,209 +37,84 @@
 
   <section class="crono-row">
     <button id="toggle-crono">▶</button>
-
     <div id="crono-display">00:00</div>
-
     <button id="minus-crono">-5s</button>
-
     <button id="plus-crono">+5s</button>
   </section>
 
   <div class="section-label">SERVICIO Y RALLY</div>
 
-  <section class="top-row">
+  <section class="service-row">
+    <button id="server-toggle" class="toggle-btn active" data-value="J1">Saca J1</button>
+    <button id="serve-number-toggle" class="toggle-btn active" data-value="1">1º</button>
+  </section>
 
-    <select id="server-select">
-      <option value="J1">Saca J1</option>
-      <option value="J2">Saca J2</option>
-      <option value="R1">Saca R1</option>
-      <option value="R2">Saca R2</option>
-    </select>
-
-    <select id="serve-number">
-      <option value="1">1º</option>
-      <option value="2">2º</option>
-    </select>
-
-    <select id="serve-direction">
-      <option value="">Dir.</option>
-      <option value="T">T</option>
-      <option value="Cristal">Cristal</option>
-      <option value="Centro">Centro</option>
-    </select>
-
-    <div class="rally-box">
-      <button id="minus-rally">-</button>
-
-      <input
-        type="number"
-        id="rally-input"
-        min="1"
-        value="1"
-      />
-
-      <button id="plus-rally">+</button>
-    </div>
-
+  <section class="rally-row">
+    <button class="btn selected" data-rally="MENOS_3">&lt; 3</button>
+    <button class="btn" data-rally="ENTRE_3_6">3 - 6</button>
+    <button class="btn" data-rally="MAS_6">&gt; 6</button>
   </section>
 
   <div class="section-label">RESULTADO DEL PUNTO</div>
 
   <section class="point-result-row">
-
-    <button
-      class="btn selected won"
-      data-point-result="WON"
-    >
-      Ganado
-    </button>
-
-    <button
-      class="btn lost"
-      data-point-result="LOST"
-    >
-      Perdido
-    </button>
-
+    <button class="btn selected won" data-point-result="WON">Ganado</button>
+    <button class="btn lost" data-point-result="LOST">Perdido</button>
   </section>
 
   <div class="section-label">JUGADOR</div>
 
   <section class="players-row two-players">
-
-    <button
-      class="btn selected"
-      data-player="J1"
-      data-team="OUR"
-    >
-      J1
-    </button>
-
-    <button
-      class="btn"
-      data-player="J2"
-      data-team="OUR"
-    >
-      J2
-    </button>
-
+    <button class="btn selected" data-player="J1" data-team="OUR">J1</button>
+    <button class="btn" data-player="J2" data-team="OUR">J2</button>
   </section>
 
   <div class="section-label">TIPO FINAL</div>
 
   <section class="outcome-row">
+    <button class="btn selected nf" data-outcome="UNFORCED_ERROR">NF</button>
+    <button class="btn f" data-outcome="FORCED_ERROR">F</button>
+    <button class="btn w" data-outcome="WINNER">W</button>
+  </section>
 
-    <button
-      class="btn selected nf"
-      data-outcome="UNFORCED_ERROR"
-    >
-      NF
-    </button>
+  <section id="stroke-area">
 
-    <button
-      class="btn f"
-      data-outcome="FORCED_ERROR"
-    >
-      F
-    </button>
+    <div class="section-label">CATEGORÍA GOLPE</div>
 
-    <button
-      class="btn w"
-      data-outcome="WINNER"
-    >
-      W
-    </button>
+    <section class="category-buttons" id="category-buttons"></section>
+
+    <div class="section-label">GOLPE</div>
+
+    <section class="stroke-buttons" id="stroke-buttons"></section>
+
+    <section class="golpe-row">
+      <div id="selected-stroke">Saque · saque t</div>
+      <div id="stroke-count">0</div>
+    </section>
 
   </section>
 
-  <div class="section-label">CATEGORÍA GOLPE</div>
+  <section id="zone-area">
 
-  <section
-    class="category-buttons"
-    id="category-buttons"
-  ></section>
+    <div class="section-label">ZONA EN PISTA</div>
 
-  <div class="section-label">GOLPE</div>
-
-  <section
-    class="stroke-buttons"
-    id="stroke-buttons"
-  ></section>
-
-  <section class="golpe-row">
-
-    <div id="selected-stroke">
-      Saque · saque t
-    </div>
-
-    <div id="stroke-count">
-      0
-    </div>
+    <section class="court" id="padel-court">
+      <button class="court-zone" data-zone="RED">RED</button>
+      <button class="court-zone" data-zone="MEDIO">MEDIO</button>
+      <button class="court-zone" data-zone="FONDO">FONDO</button>
+    </section>
 
   </section>
 
-  <div class="section-label">ZONA EN PISTA</div>
-
-  <section
-    class="court"
-    id="padel-court"
-  >
-
-    <button
-      class="court-zone"
-      data-zone="RED"
-    >
-      RED
-    </button>
-
-    <button
-      class="court-zone"
-      data-zone="MEDIO"
-    >
-      MEDIO
-    </button>
-
-    <button
-      class="court-zone"
-      data-zone="FONDO"
-    >
-      FONDO
-    </button>
-
-  </section>
-
-  <section
-    class="last-event"
-    id="last-event"
-  >
+  <section class="last-event" id="last-event">
     Sin eventos
   </section>
 
   <section class="bottom-row">
-
-    <span>
-      Eventos:
-      <strong id="event-count">0</strong>
-    </span>
-
-    <button id="reset-crono">
-      Reset
-    </button>
-
-    <button
-      id="undo-btn"
-      disabled
-    >
-      Undo
-    </button>
-
-    <button
-      id="export-btn"
-      disabled
-    >
-      CSV
-    </button>
-
+    <span>Eventos: <strong id="event-count">0</strong></span>
+    <button id="reset-crono">Reset</button>
+    <button id="undo-btn" disabled>Undo</button>
+    <button id="export-btn" disabled>CSV</button>
   </section>
 
 </main>
