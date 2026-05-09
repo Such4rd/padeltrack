@@ -23,10 +23,10 @@ const STROKES = {
   ],
 
   "Revés": [
-    "alta paralela",
-    "alta cruzada",
-    "baja paralela",
-    "baja cruzada"
+    "cruzada",
+    "paralela",
+    "centro",
+    "globo sin cristal"
   ],
 
   "Esp. fondo": [
