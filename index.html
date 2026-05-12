@@ -2,17 +2,9 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
-  />
-
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Padel Event Tracker</title>
-
-  <link
-    rel="stylesheet"
-    href="styles.css"
-  />
+  <link rel="stylesheet" href="styles.css" />
 </head>
 
 <body>
@@ -22,9 +14,7 @@
   <div class="section-label">MARCADOR</div>
 
   <section class="header-row">
-
     <div class="scoreboard">
-
       <div class="score-line">
         <span>Nosotros</span>
         <strong id="our-games">0</strong>
@@ -36,128 +26,124 @@
         <strong id="rival-games">0</strong>
         <strong id="rival-points">0</strong>
       </div>
-
     </div>
 
     <select id="deuce-mode">
       <option value="ADVANTAGE">Ventajas</option>
       <option value="GOLDEN_POINT">P. oro</option>
     </select>
-
   </section>
 
   <div class="section-label">CRONÓMETRO</div>
 
   <section class="crono-row">
-
     <button id="toggle-crono">▶</button>
-
     <div id="crono-display">00:00</div>
-
     <button id="minus-crono">-5s</button>
-
     <button id="plus-crono">+5s</button>
-
   </section>
 
-  <div class="section-label blue-label">
-    SERVICIO Y RALLY
-  </div>
+  <div class="section-label blue-label">SERVICIO Y RALLY</div>
 
   <section class="service-rally-row blue-block">
-
     <div class="service-group">
-
-      <button
-        id="server-toggle"
-        class="toggle-btn active"
-        data-value="J1"
-      >
+      <button id="server-toggle" class="toggle-btn active" data-value="J1">
         Saca J1
       </button>
 
-      <button
-        id="serve-number-toggle"
-        class="toggle-btn active"
-        data-value="1"
-      >
+      <button id="serve-number-toggle" class="toggle-btn active" data-value="1">
         1º
       </button>
-
     </div>
 
     <div class="service-divider"></div>
 
     <div class="rally-group">
-
-      <button
-        class="btn selected"
-        data-rally="MENOS_3"
-      >
-        &lt;3
-      </button>
-
-      <button
-        class="btn"
-        data-rally="ENTRE_3_6"
-      >
-        3-6
-      </button>
-
-      <button
-        class="btn"
-        data-rally="MAS_6"
-      >
-        &gt;6
-      </button>
-
+      <button class="btn selected" data-rally="MENOS_3">&lt;3</button>
+      <button class="btn" data-rally="ENTRE_3_6">3-6</button>
+      <button class="btn" data-rally="MAS_6">&gt;6</button>
     </div>
-
   </section>
 
-  <div class="section-label">RESULTADO DEL PUNTO</div>
+  <div class="section-label">CAUSA DEL PUNTO</div>
 
-  <section class="point-result-row">
+  <section class="cause-grid" id="cause-grid">
 
     <button
-      class="btn selected won"
-      data-point-result="WON"
+      class="cause-btn selected cause-won"
+      data-cause="G_NF_RIVAL"
     >
-      Ganado
+      G · NF Rival
     </button>
 
     <button
-      class="btn lost"
-      data-point-result="LOST"
+      class="cause-btn cause-won"
+      data-cause="G_W_J1"
     >
-      Perdido
-    </button>
-
-  </section>
-
-  <div class="section-label">TIPO FINAL</div>
-
-  <section class="outcome-row">
-
-    <button
-      class="btn selected nf"
-      data-outcome="UNFORCED_ERROR"
-    >
-      NF
+      G · W J1
     </button>
 
     <button
-      class="btn f"
-      data-outcome="FORCED_ERROR"
+      class="cause-btn cause-won"
+      data-cause="G_W_J2"
     >
-      F
+      G · W J2
     </button>
 
     <button
-      class="btn w"
-      data-outcome="WINNER"
+      class="cause-btn cause-won"
+      data-cause="G_F_J1"
     >
-      W
+      G · F J1
+    </button>
+
+    <button
+      class="cause-btn cause-won"
+      data-cause="G_F_J2"
+    >
+      G · F J2
+    </button>
+
+    <button
+      class="cause-btn cause-lost"
+      data-cause="P_NF_J1"
+    >
+      P · NF J1
+    </button>
+
+    <button
+      class="cause-btn cause-lost"
+      data-cause="P_NF_J2"
+    >
+      P · NF J2
+    </button>
+
+    <button
+      class="cause-btn cause-lost"
+      data-cause="P_F_J1"
+    >
+      P · F J1
+    </button>
+
+    <button
+      class="cause-btn cause-lost"
+      data-cause="P_F_J2"
+    >
+      P · F J2
+    </button>
+
+    <button
+      class="cause-btn cause-lost"
+      data-cause="P_W_RIVAL_J1"
+    >
+      P · W Riv J1
+    </button>
+
+    <button
+      class="cause-btn cause-lost"
+      data-cause="P_W_RIVAL_J2"
+    >
+      P · W Riv J2
     </button>
 
   </section>
@@ -171,8 +157,7 @@
       id="category-buttons"
     ></section>
 
-    <div class="player-panel player-j1">
-
+    <div class="player-panel player-j1" id="panel-j1">
       <div class="player-title">
         <span>J1 · Golpe</span>
         <strong id="stroke-count-j1">0</strong>
@@ -182,11 +167,9 @@
         class="stroke-buttons"
         id="stroke-buttons-j1"
       ></section>
-
     </div>
 
-    <div class="player-panel player-j2">
-
+    <div class="player-panel player-j2" id="panel-j2">
       <div class="player-title">
         <span>J2 · Golpe</span>
         <strong id="stroke-count-j2">0</strong>
@@ -196,7 +179,6 @@
         class="stroke-buttons"
         id="stroke-buttons-j2"
       ></section>
-
     </div>
 
   </section>
@@ -205,45 +187,19 @@
 
     <div class="section-label">ZONA EN PISTA</div>
 
-    <section
-      class="court"
-      id="padel-court"
-    >
-
-      <button
-        class="court-zone"
-        data-zone="RED"
-      >
-        RED
-      </button>
-
-      <button
-        class="court-zone"
-        data-zone="MEDIO"
-      >
-        MEDIO
-      </button>
-
-      <button
-        class="court-zone"
-        data-zone="FONDO"
-      >
-        FONDO
-      </button>
-
+    <section class="court" id="padel-court">
+      <button class="court-zone" data-zone="RED">RED</button>
+      <button class="court-zone" data-zone="MEDIO">MEDIO</button>
+      <button class="court-zone" data-zone="FONDO">FONDO</button>
     </section>
 
   </section>
 
-  <section
-    class="last-event"
-    id="last-event"
-  >
+  <section class="last-event" id="last-event">
     Sin eventos
   </section>
 
   <section class="bottom-row">
-
     <span>
       Eventos:
       <strong id="event-count">0</strong>
@@ -251,20 +207,13 @@
 
     <button id="reset-crono">Reset</button>
 
-    <button
-      id="undo-btn"
-      disabled
-    >
+    <button id="undo-btn" disabled>
       Undo
     </button>
 
-    <button
-      id="export-btn"
-      disabled
-    >
+    <button id="export-btn" disabled>
       CSV
     </button>
-
   </section>
 
 </main>
