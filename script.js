@@ -1,515 +1,467 @@
 const STROKES = {
-  "Saque": ["saque t", "saque cristal", "resto"],
-  "Volea derecha": ["alta paralela", "alta cruzada", "baja paralela", "baja cruzada"],
-  "Volea revés": ["alta paralela", "alta cruzada", "baja paralela", "baja cruzada"],
-  "Derecha": ["cruzada", "paralela", "centro", "globo sin cristal"],
-  "Revés": ["cruzada", "paralela", "centro", "globo sin cristal"],
-  "Esp. fondo": ["bajada derecha", "bajada revés", "chiquita cruzada", "chiquita paralela", "contrarremate", "globo con cristal"],
-  "Esp. red": ["bandeja paralela", "bandeja cruzada", "x3", "remate", "rulo", "dejada", "batalla ataque", "batalla defensa"]
-};
-
-const POINT_CAUSES = {
-  G_NF_RIVAL: {
-    point_result: "WON",
-    outcome: "RIVAL_UNFORCED_ERROR",
-    player_id: "",
-    requires_zone: true
-  },
-
-  G_WF_J1: {
-    point_result: "WON",
-    outcome: "WINNER_OR_FORCED",
-    player_id: "J1",
-    requires_zone: false
-  },
-
-  G_WF_J2: {
-    point_result: "WON",
-    outcome: "WINNER_OR_FORCED",
-    player_id: "J2",
-    requires_zone: false
-  },
-
-  P_NF_J1: {
-    point_result: "LOST",
-    outcome: "OWN_UNFORCED_ERROR",
-    player_id: "J1",
-    requires_zone: false
-  },
-
-  P_NF_J2: {
-    point_result: "LOST",
-    outcome: "OWN_UNFORCED_ERROR",
-    player_id: "J2",
-    requires_zone: false
-  },
-
-  P_WF_RIVAL_J1: {
-    point_result: "LOST",
-    outcome: "RIVAL_WINNER_OR_OWN_FORCED",
-    player_id: "J1",
-    requires_zone: false
-  },
-
-  P_WF_RIVAL_J2: {
-    point_result: "LOST",
-    outcome: "RIVAL_WINNER_OR_OWN_FORCED",
-    player_id: "J2",
-    requires_zone: false
-  }
+  "SAQUE": ["SAQUE T", "SAQUE CRISTAL", "RESTO"],
+  "DERECHA": ["CRUZADA", "PARALELA", "CENTRO", "GLOBO SIN CRISTAL"],
+  "REVES": ["CRUZADA", "PARALELA", "CENTRO", "GLOBO SIN CRISTAL"],
+  "VOLEA DERECHA": ["ALTA CRUZADA", "ALTA PARALELA", "BAJA CRUZADA", "BAJA PARALELA"],
+  "VOLEA REVES": ["ALTA CRUZADA", "ALTA PARALELA", "BAJA CRUZADA", "BAJA PARALELA"],
+  "ESP RED": ["BANDEJA CRUZADA","BANDEJA PARALELA", "X3", "REMATE", "RULO", "DEJADA", "BA", "BD" ],
+  "ESP FONDO": ["BAJADA DERECHA","BAJADA REVES", "CHIQUITA CRUZADA","CHIQUITA PARALELA", "CONTRARREMATE", "GLOBO CON CRISTAL"]
 };
 
 class PadelEventTracker {
+
   constructor() {
+
     this.events = [];
     this.pointId = 1;
-    this.currentCauseKey = "G_NF_RIVAL";
-    this.currentRallyRange = "MENOS_3";
-    this.currentStrokeCategory = "Saque";
 
-    this.playerStroke = {
-      J1: "saque t",
-      J2: "saque t"
-    };
+    this.currentStrokeCategory = "SAQUE";
 
     this.score = {
-      ourGames: 0,
-      rivalGames: 0,
-      ourPoints: 0,
-      rivalPoints: 0
+      ourGames:0,
+      rivalGames:0,
+      ourPoints:0,
+      rivalPoints:0
     };
 
     this.cronoSegundos = 0;
     this.cronoInterval = null;
     this.cronoRunning = false;
 
-    this.initStrokePanels();
-    this.initEvents();
-    this.initServiceToggles();
-    this.updateUI();
-    this.renderScore();
-    this.updateVisibleRegisterMode();
-    this.updatePlayerStrokeCount("J1");
-    this.updatePlayerStrokeCount("J2");
+    this.init();
   }
 
-  getCurrentCause() {
-    return POINT_CAUSES[this.currentCauseKey];
-  }
+  init(){
 
-  initStrokePanels() {
     this.renderCategoryButtons();
-    this.renderStrokeButtons("J1");
-    this.renderStrokeButtons("J2");
+    this.renderAllStrokePanels();
+
+    this.initToggles();
+    this.initCourtZones();
+    this.initCrono();
+    this.initBottomButtons();
+
+    this.renderScore();
   }
 
-  renderCategoryButtons() {
+  initToggles(){
+
+    this.setupToggleButton(
+      "server-toggle",
+      ["J1","J2","R1","R2"],
+      value => `Saca ${value}`
+    );
+
+    this.setupToggleButton(
+      "serve-number-toggle",
+      ["1","2"],
+      value => `${value}º`
+    );
+
+    this.setupToggleButton(
+      "rally-toggle",
+      ["MENOS_3","ENTRE_3_6","MAS_6"],
+      value => {
+        if(value==="MENOS_3") return "R:<3";
+        if(value==="ENTRE_3_6") return "R:3-6";
+        return "R:>6";
+      }
+    );
+  }
+
+  setupToggleButton(id, values, formatter){
+
+    const btn = document.getElementById(id);
+
+    btn.addEventListener("click", ()=>{
+
+      const current = btn.dataset.value;
+      const index = values.indexOf(current);
+      const next = values[(index+1)%values.length];
+
+      btn.dataset.value = next;
+      btn.textContent = formatter(next);
+    });
+  }
+
+  initCourtZones(){
+
+    document.querySelectorAll(".court-zone").forEach(zone=>{
+
+      zone.addEventListener("click", ()=>{
+
+        this.registerPoint({
+          point_result:"WON",
+          outcome:"RIVAL_UNFORCED_ERROR",
+          player_id:"",
+          stroke_category:"",
+          stroke_type:"",
+          court_zone:zone.dataset.zone
+        });
+
+      });
+
+    });
+
+  }
+
+  renderCategoryButtons(){
+
     const container = document.getElementById("category-buttons");
     container.innerHTML = "";
 
-    Object.keys(STROKES).forEach(category => {
-      const button = document.createElement("button");
-      button.className = "category-btn";
-      button.textContent = category;
+    Object.keys(STROKES).forEach(category=>{
 
-      if (category === this.currentStrokeCategory) {
-        button.classList.add("selected");
+      const btn = document.createElement("button");
+
+      btn.className = "category-btn";
+      btn.textContent = category;
+
+      if(category===this.currentStrokeCategory){
+        btn.classList.add("selected");
       }
 
-      button.addEventListener("click", () => {
+      btn.addEventListener("click", ()=>{
+
         this.currentStrokeCategory = category;
-        this.playerStroke.J1 = STROKES[category][0];
-        this.playerStroke.J2 = STROKES[category][0];
+
+        if(category==="Saque"){
+          const rallyBtn = document.getElementById("rally-toggle");
+          rallyBtn.dataset.value = "MENOS_3";
+          rallyBtn.textContent = "R:<3";
+        }
 
         this.renderCategoryButtons();
-        this.renderStrokeButtons("J1");
-        this.renderStrokeButtons("J2");
-        this.updatePlayerStrokeCount("J1");
-        this.updatePlayerStrokeCount("J2");
+        this.renderAllStrokePanels();
       });
 
-      container.appendChild(button);
+      container.appendChild(btn);
+
     });
+
   }
 
-  renderStrokeButtons(playerId) {
-    const container = document.getElementById(`stroke-buttons-${playerId.toLowerCase()}`);
+  renderAllStrokePanels(){
+
+    this.renderStrokePanel("j1-win","J1","WON","WINNER_OR_FORCED");
+    this.renderStrokePanel("j1-nf","J1","LOST","OWN_UNFORCED_ERROR");
+    this.renderStrokePanel("j1-lost","J1","LOST","RIVAL_WINNER_OR_OWN_FORCED");
+
+    this.renderStrokePanel("j2-win","J2","WON","WINNER_OR_FORCED");
+    this.renderStrokePanel("j2-nf","J2","LOST","OWN_UNFORCED_ERROR");
+    this.renderStrokePanel("j2-lost","J2","LOST","RIVAL_WINNER_OR_OWN_FORCED");
+  }
+
+  renderStrokePanel(panelId, playerId, pointResult, outcome){
+
+    const container = document.getElementById(`stroke-buttons-${panelId}`);
     container.innerHTML = "";
 
-    STROKES[this.currentStrokeCategory].forEach(stroke => {
-      const button = document.createElement("button");
-      button.className = "stroke-btn";
-      button.textContent = stroke;
-
-      if (stroke === this.playerStroke[playerId]) {
-        button.classList.add("selected");
-      }
-
-      button.addEventListener("click", () => {
-        this.playerStroke[playerId] = stroke;
-        this.renderStrokeButtons(playerId);
-        this.updatePlayerStrokeCount(playerId);
-
-        const cause = this.getCurrentCause();
-
-        if (!cause.requires_zone && cause.player_id === playerId) {
-          this.registerPoint({
-            zone: "",
-            playerId,
-            category: this.currentStrokeCategory,
-            stroke
-          });
-        }
-      });
-
-      container.appendChild(button);
-    });
-  }
-
-  updatePlayerStrokeCount(playerId) {
-    const cause = this.getCurrentCause();
-    const selectedStroke = this.playerStroke[playerId];
-
-    const count = this.events.filter(event =>
-      event.player_id === playerId &&
-      event.stroke_category === this.currentStrokeCategory &&
-      event.stroke_type === selectedStroke &&
-      event.point_result === cause.point_result &&
-      event.outcome === cause.outcome
+    const counter = this.events.filter(e =>
+      e.player_id===playerId &&
+      e.point_result===pointResult &&
+      e.outcome===outcome
     ).length;
 
-    const box = document.getElementById(`stroke-count-${playerId.toLowerCase()}`);
-    if (box) box.textContent = count;
-  }
+    document.getElementById(`counter-${panelId}`).textContent = counter;
 
-  initServiceToggles() {
-    this.setupToggleButton("server-toggle", ["J1", "J2", "R1", "R2"], value => `Saca ${value}`);
-    this.setupToggleButton("serve-number-toggle", ["1", "2"], value => `${value}º`);
-  }
+    STROKES[this.currentStrokeCategory].forEach(stroke=>{
 
-  setupToggleButton(buttonId, values, labelFormatter) {
-    const button = document.getElementById(buttonId);
+      const btn = document.createElement("button");
 
-    button.addEventListener("click", () => {
-      const currentValue = button.dataset.value;
-      const currentIndex = values.indexOf(currentValue);
-      const nextValue = values[(currentIndex + 1) % values.length];
+      btn.className = "stroke-btn";
+      btn.textContent = stroke;
 
-      button.dataset.value = nextValue;
-      button.textContent = labelFormatter(nextValue);
-      button.classList.add("active");
-    });
-  }
+      btn.addEventListener("click", ()=>{
 
-  getServiceValue(buttonId) {
-    return document.getElementById(buttonId).dataset.value;
-  }
+        this.registerPoint({
+          point_result:pointResult,
+          outcome:outcome,
+          player_id:playerId,
+          stroke_category:this.currentStrokeCategory,
+          stroke_type:stroke,
+          court_zone:""
+        });
 
-  initEvents() {
-    document.querySelectorAll("[data-cause]").forEach(button => {
-      button.addEventListener("click", () => {
-        this.currentCauseKey = button.dataset.cause;
-        this.setSelected("[data-cause]", button);
-        this.updateVisibleRegisterMode();
-        this.updatePlayerStrokeCount("J1");
-        this.updatePlayerStrokeCount("J2");
       });
+
+      container.appendChild(btn);
+
     });
 
-    document.querySelectorAll("[data-rally]").forEach(button => {
-      button.addEventListener("click", () => {
-        this.currentRallyRange = button.dataset.rally;
-        this.setSelected("[data-rally]", button);
-      });
-    });
-
-    document.querySelectorAll(".court-zone").forEach(zone => {
-      zone.addEventListener("click", () => {
-        const cause = this.getCurrentCause();
-
-        if (cause.requires_zone) {
-          this.registerPoint({
-            zone: zone.dataset.zone,
-            playerId: "",
-            category: "",
-            stroke: ""
-          });
-        }
-      });
-    });
-
-    document.getElementById("toggle-crono").addEventListener("click", () => this.toggleCrono());
-    document.getElementById("minus-crono").addEventListener("click", () => this.modifyCrono(-5));
-    document.getElementById("plus-crono").addEventListener("click", () => this.modifyCrono(5));
-    document.getElementById("reset-crono").addEventListener("click", () => this.resetCrono());
-    document.getElementById("undo-btn").addEventListener("click", () => this.undoLastEvent());
-    document.getElementById("export-btn").addEventListener("click", () => this.exportCSV());
-
-    document.getElementById("deuce-mode").addEventListener("change", () => {
-      this.recalculateScore();
-      this.renderScore();
-    });
   }
 
-  updateVisibleRegisterMode() {
-    const cause = this.getCurrentCause();
+  initCrono(){
 
-    const playersStrokeArea = document.getElementById("players-stroke-area");
-    const zoneArea = document.getElementById("zone-area");
-    const panelJ1 = document.getElementById("panel-j1");
-    const panelJ2 = document.getElementById("panel-j2");
+    document.getElementById("toggle-crono")
+      .addEventListener("click", ()=>this.toggleCrono());
 
-    if (cause.requires_zone) {
-      playersStrokeArea.classList.add("hidden");
-      zoneArea.classList.remove("hidden");
-      return;
-    }
+    document.getElementById("minus-crono")
+      .addEventListener("click", ()=>this.modifyCrono(-5));
 
-    zoneArea.classList.add("hidden");
-    playersStrokeArea.classList.remove("hidden");
+    document.getElementById("plus-crono")
+      .addEventListener("click", ()=>this.modifyCrono(5));
 
-    panelJ1.classList.toggle("hidden", cause.player_id !== "J1");
-    panelJ2.classList.toggle("hidden", cause.player_id !== "J2");
+    document.getElementById("reset-crono")
+      .addEventListener("click", ()=>this.resetCrono());
   }
 
-  setSelected(selector, selectedButton) {
-    document.querySelectorAll(selector).forEach(button => {
-      button.classList.remove("selected");
-    });
+  toggleCrono(){
 
-    selectedButton.classList.add("selected");
+    this.cronoRunning
+      ? this.stopCrono()
+      : this.startCrono();
   }
 
-  toggleCrono() {
-    this.cronoRunning ? this.stopCrono() : this.startCrono();
-  }
+  startCrono(){
 
-  startCrono() {
-    if (this.cronoInterval) return;
+    if(this.cronoInterval) return;
 
     this.cronoRunning = true;
+
     document.getElementById("toggle-crono").textContent = "⏸";
 
-    this.cronoInterval = setInterval(() => {
+    this.cronoInterval = setInterval(()=>{
+
       this.cronoSegundos++;
       this.renderCrono();
-    }, 1000);
+
+    },1000);
   }
 
-  stopCrono() {
+  stopCrono(){
+
     clearInterval(this.cronoInterval);
+
     this.cronoInterval = null;
     this.cronoRunning = false;
+
     document.getElementById("toggle-crono").textContent = "▶";
   }
 
-  resetCrono() {
+  modifyCrono(value){
+
+    this.cronoSegundos = Math.max(0,this.cronoSegundos+value);
+    this.renderCrono();
+  }
+
+  resetCrono(){
+
     this.cronoSegundos = 0;
     this.renderCrono();
   }
 
-  modifyCrono(value) {
-    this.cronoSegundos = Math.max(0, this.cronoSegundos + value);
-    this.renderCrono();
+  renderCrono(){
+
+    const min = String(Math.floor(this.cronoSegundos/60)).padStart(2,"0");
+    const sec = String(this.cronoSegundos%60).padStart(2,"0");
+
+    document.getElementById("crono-display").textContent = `${min}:${sec}`;
   }
 
-  renderCrono() {
-    const minutes = String(Math.floor(this.cronoSegundos / 60)).padStart(2, "0");
-    const seconds = String(this.cronoSegundos % 60).padStart(2, "0");
-    document.getElementById("crono-display").textContent = `${minutes}:${seconds}`;
-  }
+  addScorePoint(winner){
 
-  getDeuceMode() {
-    return document.getElementById("deuce-mode").value;
-  }
+    winner==="OUR"
+      ? this.score.ourPoints++
+      : this.score.rivalPoints++;
 
-  addScorePoint(winner) {
-    winner === "OUR" ? this.score.ourPoints++ : this.score.rivalPoints++;
     this.normalizeGameScore();
   }
 
-  normalizeGameScore() {
+  normalizeGameScore(){
+
     const our = this.score.ourPoints;
     const rival = this.score.rivalPoints;
-    const mode = this.getDeuceMode();
 
-    if (mode === "GOLDEN_POINT") {
-      if (our >= 4 && rival >= 3) this.winGame("OUR");
-      else if (rival >= 4 && our >= 3) this.winGame("RIVAL");
-      else if (our >= 4) this.winGame("OUR");
-      else if (rival >= 4) this.winGame("RIVAL");
-      return;
+    if(our>=4 && our-rival>=2){
+      this.winGame("OUR");
     }
 
-    if (our >= 4 && our - rival >= 2) this.winGame("OUR");
-    if (rival >= 4 && rival - our >= 2) this.winGame("RIVAL");
+    if(rival>=4 && rival-our>=2){
+      this.winGame("RIVAL");
+    }
   }
 
-  winGame(team) {
-    team === "OUR" ? this.score.ourGames++ : this.score.rivalGames++;
+  winGame(team){
+
+    team==="OUR"
+      ? this.score.ourGames++
+      : this.score.rivalGames++;
+
     this.score.ourPoints = 0;
     this.score.rivalPoints = 0;
   }
 
-  getPointLabel(ourPoints, rivalPoints, team) {
-    const labels = ["0", "15", "30", "40"];
-    const own = team === "OUR" ? ourPoints : rivalPoints;
-    const other = team === "OUR" ? rivalPoints : ourPoints;
+  getPointLabel(points){
 
-    if (own <= 3 && other <= 3) return labels[own];
-
-    if (own >= 3 && other >= 3) {
-      if (own === other) return "40";
-      if (this.getDeuceMode() === "ADVANTAGE") {
-        return own > other ? "AD" : "40";
-      }
-      return "40";
-    }
-
-    return labels[Math.min(own, 3)];
+    return ["0","15","30","40"][Math.min(points,3)];
   }
 
-  renderScore() {
-    document.getElementById("our-games").textContent = this.score.ourGames;
-    document.getElementById("rival-games").textContent = this.score.rivalGames;
+  renderScore(){
+
+    document.getElementById("our-games").textContent =
+      this.score.ourGames;
+
+    document.getElementById("rival-games").textContent =
+      this.score.rivalGames;
 
     document.getElementById("our-points").textContent =
-      this.getPointLabel(this.score.ourPoints, this.score.rivalPoints, "OUR");
+      this.getPointLabel(this.score.ourPoints);
 
     document.getElementById("rival-points").textContent =
-      this.getPointLabel(this.score.ourPoints, this.score.rivalPoints, "RIVAL");
+      this.getPointLabel(this.score.rivalPoints);
   }
 
-  recalculateScore() {
-    this.score = {
-      ourGames: 0,
-      rivalGames: 0,
-      ourPoints: 0,
-      rivalPoints: 0
-    };
+  registerPoint(data){
 
-    this.events.forEach(event => {
-      const winner = event.point_result === "WON" ? "OUR" : "RIVAL";
-      this.addScorePoint(winner);
-    });
-  }
-
-  registerPoint(data) {
-    const cause = this.getCurrentCause();
-    const winner = cause.point_result === "WON" ? "OUR" : "RIVAL";
+    const winner =
+      data.point_result==="WON"
+        ? "OUR"
+        : "RIVAL";
 
     this.addScorePoint(winner);
 
     const event = {
-      timestamp: new Date().toISOString(),
-      point_id: this.pointId,
-      cause_key: this.currentCauseKey,
-      point_result: cause.point_result,
-      player_id: data.playerId,
-      player_team: data.playerId ? "OUR" : "",
-      stroke_category: data.category,
-      stroke_type: data.stroke,
-      outcome: cause.outcome,
-      rally: this.currentRallyRange,
-      server: this.getServiceValue("server-toggle"),
-      serve_number: this.getServiceValue("serve-number-toggle"),
-      serve_direction: "",
-      court_zone: data.zone,
-      point_duration_seconds: this.cronoSegundos,
-      deuce_mode: this.getDeuceMode(),
-      our_games_after: this.score.ourGames,
-      rival_games_after: this.score.rivalGames,
-      our_points_after: this.getPointLabel(this.score.ourPoints, this.score.rivalPoints, "OUR"),
-      rival_points_after: this.getPointLabel(this.score.ourPoints, this.score.rivalPoints, "RIVAL")
+
+      timestamp:new Date().toISOString(),
+
+      point_id:this.pointId,
+
+      point_result:data.point_result,
+      outcome:data.outcome,
+
+      player_id:data.player_id,
+
+      stroke_category:data.stroke_category,
+      stroke_type:data.stroke_type,
+
+      court_zone:data.court_zone,
+
+      rally:document.getElementById("rally-toggle").dataset.value,
+
+      server:document.getElementById("server-toggle").dataset.value,
+
+      serve_number:document.getElementById("serve-number-toggle").dataset.value,
+
+      point_duration_seconds:this.cronoSegundos,
+
+      our_games_after:this.score.ourGames,
+      rival_games_after:this.score.rivalGames
     };
 
     this.events.push(event);
+
     this.pointId++;
 
-    this.updateUI();
+    document.getElementById("serve-number-toggle").dataset.value = "1";
+    document.getElementById("serve-number-toggle").textContent = "1º";
+
+    this.renderAllStrokePanels();
     this.renderScore();
-    this.updatePlayerStrokeCount("J1");
-    this.updatePlayerStrokeCount("J2");
+    this.updateUI();
   }
 
-  undoLastEvent() {
-    if (this.events.length === 0) return;
+  updateUI(){
 
-    this.events.pop();
-    this.pointId = Math.max(1, this.pointId - 1);
+    document.getElementById("event-count").textContent =
+      this.events.length;
 
-    this.recalculateScore();
-    this.updateUI();
-    this.renderScore();
-    this.updatePlayerStrokeCount("J1");
-    this.updatePlayerStrokeCount("J2");
-  }
+    document.getElementById("undo-btn").disabled =
+      this.events.length===0;
 
-  updateUI() {
-    document.getElementById("event-count").textContent = this.events.length;
-    document.getElementById("undo-btn").disabled = this.events.length === 0;
-    document.getElementById("export-btn").disabled = this.events.length === 0;
+    document.getElementById("export-btn").disabled =
+      this.events.length===0;
 
-    const lastEvent = this.events[this.events.length - 1];
-    const box = document.getElementById("last-event");
+    const last = this.events[this.events.length-1];
 
-    if (!lastEvent) {
-      box.textContent = "Sin eventos";
+    if(!last){
+
+      document.getElementById("last-event").textContent =
+        "Sin eventos";
+
       return;
     }
 
-    box.textContent =
-      `P${lastEvent.point_id} · ${lastEvent.cause_key} · ${lastEvent.player_id || "ZONA"} · ${lastEvent.stroke_type || lastEvent.court_zone} · ${lastEvent.our_games_after}-${lastEvent.rival_games_after}`;
+    document.getElementById("last-event").textContent =
+      `${last.player_id || "RIVAL"} · ${last.stroke_type || last.court_zone}`;
   }
 
-  exportCSV() {
-    const headers = [
-      "timestamp",
-      "point_id",
-      "cause_key",
-      "point_result",
-      "player_id",
-      "player_team",
-      "stroke_category",
-      "stroke_type",
-      "outcome",
-      "rally",
-      "server",
-      "serve_number",
-      "serve_direction",
-      "court_zone",
-      "point_duration_seconds",
-      "deuce_mode",
-      "our_games_after",
-      "rival_games_after",
-      "our_points_after",
-      "rival_points_after"
-    ];
+  initBottomButtons(){
 
-    const rows = this.events.map(event => {
-      return headers.map(header => {
-        const value = event[header] ?? "";
-        return `"${String(value).replaceAll('"', '""')}"`;
-      }).join(",");
+    document.getElementById("undo-btn")
+      .addEventListener("click", ()=>this.undoLastEvent());
+
+    document.getElementById("export-btn")
+      .addEventListener("click", ()=>this.exportCSV());
+  }
+
+  undoLastEvent(){
+
+    if(this.events.length===0) return;
+
+    this.events.pop();
+
+    this.score = {
+      ourGames:0,
+      rivalGames:0,
+      ourPoints:0,
+      rivalPoints:0
+    };
+
+    this.events.forEach(event=>{
+
+      const winner =
+        event.point_result==="WON"
+          ? "OUR"
+          : "RIVAL";
+
+      this.addScorePoint(winner);
     });
 
-    const csvContent = [headers.join(","), ...rows].join("\n");
+    this.renderAllStrokePanels();
+    this.renderScore();
+    this.updateUI();
+  }
 
-    const blob = new Blob([csvContent], {
-      type: "text/csv;charset=utf-8;"
+  exportCSV(){
+
+    const headers = Object.keys(this.events[0] || {});
+
+    const rows = this.events.map(event => {
+
+      return headers.map(header => {
+
+        const value = event[header] ?? "";
+
+        return `"${String(value).replaceAll('"','""')}"`;
+
+      }).join(",");
+
+    });
+
+    const csv = [headers.join(","),...rows].join("\n");
+
+    const blob = new Blob([csv],{
+      type:"text/csv;charset=utf-8;"
     });
 
     const link = document.createElement("a");
-    const url = URL.createObjectURL(blob);
 
-    link.href = url;
+    link.href = URL.createObjectURL(blob);
+
     link.download = "padel-events.csv";
+
     document.body.appendChild(link);
+
     link.click();
+
     document.body.removeChild(link);
   }
+
 }
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", ()=>{
+
   new PadelEventTracker();
+
 });
