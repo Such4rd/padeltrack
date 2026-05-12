@@ -6,7 +6,6 @@
   <title>Padel Event Tracker</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
-
 <body>
 
 <main class="app">
@@ -20,7 +19,6 @@
         <strong id="our-games">0</strong>
         <strong id="our-points">0</strong>
       </div>
-
       <div class="score-line">
         <span>Rivales</span>
         <strong id="rival-games">0</strong>
@@ -47,13 +45,8 @@
 
   <section class="service-rally-row blue-block">
     <div class="service-group">
-      <button id="server-toggle" class="toggle-btn active" data-value="J1">
-        Saca J1
-      </button>
-
-      <button id="serve-number-toggle" class="toggle-btn active" data-value="1">
-        1º
-      </button>
+      <button id="server-toggle" class="toggle-btn active" data-value="J1">Saca J1</button>
+      <button id="serve-number-toggle" class="toggle-btn active" data-value="1">1º</button>
     </div>
 
     <div class="service-divider"></div>
@@ -67,84 +60,36 @@
 
   <div class="section-label">CAUSA DEL PUNTO</div>
 
-  <section class="cause-grid" id="cause-grid">
+  <section class="cause-panel">
 
-    <button
-      class="cause-btn selected cause-won"
-      data-cause="G_NF_RIVAL"
-    >
-      G · NF Rival
-    </button>
+    <div class="cause-block cause-rival">
+      <div class="cause-title">RIVAL</div>
+      <div class="cause-row one">
+        <button class="cause-btn selected" data-cause="G_NF_RIVAL">Ganado · NF rival</button>
+      </div>
+    </div>
 
-    <button
-      class="cause-btn cause-won"
-      data-cause="G_W_J1"
-    >
-      G · W J1
-    </button>
+    <div class="cause-block cause-j1">
+      <div class="cause-title">J1</div>
+      <div class="cause-row">
+        <button class="cause-btn" data-cause="G_W_J1">G · Winner</button>
+        <button class="cause-btn" data-cause="G_F_J1">G · Forzado</button>
+        <button class="cause-btn" data-cause="P_NF_J1">P · NF</button>
+        <button class="cause-btn" data-cause="P_F_J1">P · Forzado</button>
+        <button class="cause-btn" data-cause="P_W_RIVAL_J1">P · Winner rival</button>
+      </div>
+    </div>
 
-    <button
-      class="cause-btn cause-won"
-      data-cause="G_W_J2"
-    >
-      G · W J2
-    </button>
-
-    <button
-      class="cause-btn cause-won"
-      data-cause="G_F_J1"
-    >
-      G · F J1
-    </button>
-
-    <button
-      class="cause-btn cause-won"
-      data-cause="G_F_J2"
-    >
-      G · F J2
-    </button>
-
-    <button
-      class="cause-btn cause-lost"
-      data-cause="P_NF_J1"
-    >
-      P · NF J1
-    </button>
-
-    <button
-      class="cause-btn cause-lost"
-      data-cause="P_NF_J2"
-    >
-      P · NF J2
-    </button>
-
-    <button
-      class="cause-btn cause-lost"
-      data-cause="P_F_J1"
-    >
-      P · F J1
-    </button>
-
-    <button
-      class="cause-btn cause-lost"
-      data-cause="P_F_J2"
-    >
-      P · F J2
-    </button>
-
-    <button
-      class="cause-btn cause-lost"
-      data-cause="P_W_RIVAL_J1"
-    >
-      P · W Riv J1
-    </button>
-
-    <button
-      class="cause-btn cause-lost"
-      data-cause="P_W_RIVAL_J2"
-    >
-      P · W Riv J2
-    </button>
+    <div class="cause-block cause-j2">
+      <div class="cause-title">J2</div>
+      <div class="cause-row">
+        <button class="cause-btn" data-cause="G_W_J2">G · Winner</button>
+        <button class="cause-btn" data-cause="G_F_J2">G · Forzado</button>
+        <button class="cause-btn" data-cause="P_NF_J2">P · NF</button>
+        <button class="cause-btn" data-cause="P_F_J2">P · Forzado</button>
+        <button class="cause-btn" data-cause="P_W_RIVAL_J2">P · Winner rival</button>
+      </div>
+    </div>
 
   </section>
 
@@ -152,21 +97,14 @@
 
     <div class="section-label">CATEGORÍA GOLPE</div>
 
-    <section
-      class="category-buttons"
-      id="category-buttons"
-    ></section>
+    <section class="category-buttons" id="category-buttons"></section>
 
     <div class="player-panel player-j1" id="panel-j1">
       <div class="player-title">
         <span>J1 · Golpe</span>
         <strong id="stroke-count-j1">0</strong>
       </div>
-
-      <section
-        class="stroke-buttons"
-        id="stroke-buttons-j1"
-      ></section>
+      <section class="stroke-buttons" id="stroke-buttons-j1"></section>
     </div>
 
     <div class="player-panel player-j2" id="panel-j2">
@@ -174,11 +112,7 @@
         <span>J2 · Golpe</span>
         <strong id="stroke-count-j2">0</strong>
       </div>
-
-      <section
-        class="stroke-buttons"
-        id="stroke-buttons-j2"
-      ></section>
+      <section class="stroke-buttons" id="stroke-buttons-j2"></section>
     </div>
 
   </section>
@@ -200,20 +134,10 @@
   </section>
 
   <section class="bottom-row">
-    <span>
-      Eventos:
-      <strong id="event-count">0</strong>
-    </span>
-
+    <span>Eventos: <strong id="event-count">0</strong></span>
     <button id="reset-crono">Reset</button>
-
-    <button id="undo-btn" disabled>
-      Undo
-    </button>
-
-    <button id="export-btn" disabled>
-      CSV
-    </button>
+    <button id="undo-btn" disabled>Undo</button>
+    <button id="export-btn" disabled>CSV</button>
   </section>
 
 </main>
