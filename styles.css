@@ -170,42 +170,72 @@ select {
   border-color: #1565c0;
 }
 
-/* CAUSA DEL PUNTO */
+/* CAUSA */
 
-.cause-grid {
+.cause-panel {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: 1fr;
   gap: 4px;
 }
 
-.cause-btn {
-  height: 31px;
-  font-size: 10px;
-  line-height: 1;
-  padding: 1px 3px;
-  background: #191919;
+.cause-block {
+  border: 1px solid #333;
+  border-radius: 7px;
+  padding: 4px;
+  background: #171717;
 }
 
-.cause-btn.selected {
-  color: #fff;
+.cause-rival {
+  border-color: #777;
 }
 
-.cause-btn.cause-won {
-  border-color: #2f7d32;
-}
-
-.cause-btn.cause-lost {
-  border-color: #8c2f2f;
-}
-
-.cause-btn.cause-won.selected {
-  background: #4caf50;
+.cause-j1 {
   border-color: #4caf50;
 }
 
-.cause-btn.cause-lost.selected {
-  background: #b64040;
-  border-color: #b64040;
+.cause-j2 {
+  border-color: #4da3ff;
+}
+
+.cause-title {
+  font-size: 9px;
+  font-weight: 900;
+  letter-spacing: 0.7px;
+  margin-bottom: 3px;
+  color: #aaa;
+}
+
+.cause-j1 .cause-title {
+  color: #4caf50;
+}
+
+.cause-j2 .cause-title {
+  color: #4da3ff;
+}
+
+.cause-row {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 3px;
+}
+
+.cause-row.one {
+  grid-template-columns: 1fr;
+}
+
+.cause-btn {
+  height: 26px;
+  font-size: 8.4px;
+  line-height: 1;
+  padding: 1px 2px;
+  background: #191919;
+  border-color: #444;
+}
+
+.cause-btn.selected {
+  background: #4caf50;
+  border-color: #4caf50;
+  color: #fff;
 }
 
 /* JUGADORES */
@@ -371,93 +401,4 @@ select {
 
 button:disabled {
   opacity: 0.35;
-}
-
-@media (max-width: 390px) {
-
-  body {
-    padding: 3px;
-  }
-
-  .app {
-    gap: 3px;
-  }
-
-  button,
-  select {
-    height: 29px;
-    font-size: 10px;
-  }
-
-  .header-row {
-    grid-template-columns: 1fr 66px;
-  }
-
-  .scoreboard,
-  #deuce-mode {
-    height: 42px;
-  }
-
-  .score-line {
-    font-size: 11px;
-    grid-template-columns: 1fr 24px 32px;
-  }
-
-  .score-line strong {
-    font-size: 15px;
-  }
-
-  .crono-row {
-    grid-template-columns: 36px 1fr 40px 40px;
-  }
-
-  #crono-display {
-    height: 29px;
-    font-size: 18px;
-  }
-
-  .service-rally-row {
-    gap: 4px;
-  }
-
-  .service-divider {
-    height: 24px;
-  }
-
-  .cause-grid {
-    grid-template-columns: repeat(3, 1fr);
-  }
-
-  .cause-btn {
-    height: 27px;
-    font-size: 8.6px;
-  }
-
-  .category-buttons {
-    grid-template-columns: repeat(4, 1fr);
-  }
-
-  .stroke-buttons {
-    grid-template-columns: repeat(4, 1fr);
-  }
-
-  .category-btn,
-  .stroke-btn {
-    height: 23px !important;
-    min-height: 23px !important;
-    font-size: 7.8px !important;
-    padding: 1px 2px;
-  }
-
-  .player-title {
-    font-size: 9.5px;
-  }
-
-  .court {
-    height: 52px;
-  }
-
-  .bottom-row {
-    grid-template-columns: 1fr 44px 44px 44px;
-  }
 }
