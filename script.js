@@ -9,100 +9,23 @@ const STROKES = {
 };
 
 const POINT_CAUSES = {
-  G_NF_RIVAL: {
-    point_result: "WON",
-    outcome: "RIVAL_UNFORCED_ERROR",
-    player_id: "",
-    requires_zone: true,
-    requires_stroke: false
-  },
-
-  G_W_J1: {
-    point_result: "WON",
-    outcome: "WINNER",
-    player_id: "J1",
-    requires_zone: false,
-    requires_stroke: true
-  },
-
-  G_W_J2: {
-    point_result: "WON",
-    outcome: "WINNER",
-    player_id: "J2",
-    requires_zone: false,
-    requires_stroke: true
-  },
-
-  G_F_J1: {
-    point_result: "WON",
-    outcome: "FORCED_ERROR",
-    player_id: "J1",
-    requires_zone: false,
-    requires_stroke: true
-  },
-
-  G_F_J2: {
-    point_result: "WON",
-    outcome: "FORCED_ERROR",
-    player_id: "J2",
-    requires_zone: false,
-    requires_stroke: true
-  },
-
-  P_NF_J1: {
-    point_result: "LOST",
-    outcome: "OWN_UNFORCED_ERROR",
-    player_id: "J1",
-    requires_zone: false,
-    requires_stroke: true
-  },
-
-  P_NF_J2: {
-    point_result: "LOST",
-    outcome: "OWN_UNFORCED_ERROR",
-    player_id: "J2",
-    requires_zone: false,
-    requires_stroke: true
-  },
-
-  P_F_J1: {
-    point_result: "LOST",
-    outcome: "OWN_FORCED_ERROR",
-    player_id: "J1",
-    requires_zone: false,
-    requires_stroke: true
-  },
-
-  P_F_J2: {
-    point_result: "LOST",
-    outcome: "OWN_FORCED_ERROR",
-    player_id: "J2",
-    requires_zone: false,
-    requires_stroke: true
-  },
-
-  P_W_RIVAL_J1: {
-    point_result: "LOST",
-    outcome: "RIVAL_WINNER",
-    player_id: "J1",
-    requires_zone: false,
-    requires_stroke: true
-  },
-
-  P_W_RIVAL_J2: {
-    point_result: "LOST",
-    outcome: "RIVAL_WINNER",
-    player_id: "J2",
-    requires_zone: false,
-    requires_stroke: true
-  }
+  G_NF_RIVAL: { point_result: "WON", outcome: "RIVAL_UNFORCED_ERROR", player_id: "", requires_zone: true },
+  G_W_J1: { point_result: "WON", outcome: "WINNER", player_id: "J1", requires_zone: false },
+  G_W_J2: { point_result: "WON", outcome: "WINNER", player_id: "J2", requires_zone: false },
+  G_F_J1: { point_result: "WON", outcome: "FORCED_ERROR", player_id: "J1", requires_zone: false },
+  G_F_J2: { point_result: "WON", outcome: "FORCED_ERROR", player_id: "J2", requires_zone: false },
+  P_NF_J1: { point_result: "LOST", outcome: "OWN_UNFORCED_ERROR", player_id: "J1", requires_zone: false },
+  P_NF_J2: { point_result: "LOST", outcome: "OWN_UNFORCED_ERROR", player_id: "J2", requires_zone: false },
+  P_F_J1: { point_result: "LOST", outcome: "OWN_FORCED_ERROR", player_id: "J1", requires_zone: false },
+  P_F_J2: { point_result: "LOST", outcome: "OWN_FORCED_ERROR", player_id: "J2", requires_zone: false },
+  P_W_RIVAL_J1: { point_result: "LOST", outcome: "RIVAL_WINNER", player_id: "J1", requires_zone: false },
+  P_W_RIVAL_J2: { point_result: "LOST", outcome: "RIVAL_WINNER", player_id: "J2", requires_zone: false }
 };
 
 class PadelEventTracker {
   constructor() {
     this.events = [];
     this.pointId = 1;
-
     this.currentCauseKey = "G_NF_RIVAL";
     this.currentRallyRange = "MENOS_3";
     this.currentStrokeCategory = "Saque";
@@ -126,7 +49,6 @@ class PadelEventTracker {
     this.initStrokePanels();
     this.initEvents();
     this.initServiceToggles();
-
     this.updateUI();
     this.renderScore();
     this.updateVisibleRegisterMode();
@@ -152,7 +74,6 @@ class PadelEventTracker {
       const button = document.createElement("button");
       button.className = "category-btn";
       button.textContent = category;
-      button.dataset.category = category;
 
       if (category === this.currentStrokeCategory) {
         button.classList.add("selected");
@@ -160,14 +81,12 @@ class PadelEventTracker {
 
       button.addEventListener("click", () => {
         this.currentStrokeCategory = category;
-
         this.playerStroke.J1 = STROKES[category][0];
         this.playerStroke.J2 = STROKES[category][0];
 
         this.renderCategoryButtons();
         this.renderStrokeButtons("J1");
         this.renderStrokeButtons("J2");
-
         this.updatePlayerStrokeCount("J1");
         this.updatePlayerStrokeCount("J2");
       });
@@ -196,7 +115,7 @@ class PadelEventTracker {
 
         const cause = this.getCurrentCause();
 
-        if (cause.requires_stroke && cause.player_id === playerId) {
+        if (!cause.requires_zone && cause.player_id === playerId) {
           this.registerPoint({
             zone: "",
             playerId,
@@ -222,21 +141,13 @@ class PadelEventTracker {
       event.outcome === cause.outcome
     ).length;
 
-    document.getElementById(`stroke-count-${playerId.toLowerCase()}`).textContent = count;
+    const box = document.getElementById(`stroke-count-${playerId.toLowerCase()}`);
+    if (box) box.textContent = count;
   }
 
   initServiceToggles() {
-    this.setupToggleButton(
-      "server-toggle",
-      ["J1", "J2", "R1", "R2"],
-      value => `Saca ${value}`
-    );
-
-    this.setupToggleButton(
-      "serve-number-toggle",
-      ["1", "2"],
-      value => `${value}º`
-    );
+    this.setupToggleButton("server-toggle", ["J1", "J2", "R1", "R2"], value => `Saca ${value}`);
+    this.setupToggleButton("serve-number-toggle", ["1", "2"], value => `${value}º`);
   }
 
   setupToggleButton(buttonId, values, labelFormatter) {
@@ -294,7 +205,6 @@ class PadelEventTracker {
     document.getElementById("minus-crono").addEventListener("click", () => this.modifyCrono(-5));
     document.getElementById("plus-crono").addEventListener("click", () => this.modifyCrono(5));
     document.getElementById("reset-crono").addEventListener("click", () => this.resetCrono());
-
     document.getElementById("undo-btn").addEventListener("click", () => this.undoLastEvent());
     document.getElementById("export-btn").addEventListener("click", () => this.exportCSV());
 
@@ -369,7 +279,6 @@ class PadelEventTracker {
   renderCrono() {
     const minutes = String(Math.floor(this.cronoSegundos / 60)).padStart(2, "0");
     const seconds = String(this.cronoSegundos % 60).padStart(2, "0");
-
     document.getElementById("crono-display").textContent = `${minutes}:${seconds}`;
   }
 
@@ -401,7 +310,6 @@ class PadelEventTracker {
 
   winGame(team) {
     team === "OUR" ? this.score.ourGames++ : this.score.rivalGames++;
-
     this.score.ourPoints = 0;
     this.score.rivalPoints = 0;
   }
@@ -415,11 +323,9 @@ class PadelEventTracker {
 
     if (own >= 3 && other >= 3) {
       if (own === other) return "40";
-
       if (this.getDeuceMode() === "ADVANTAGE") {
         return own > other ? "AD" : "40";
       }
-
       return "40";
     }
 
@@ -508,14 +414,14 @@ class PadelEventTracker {
     document.getElementById("export-btn").disabled = this.events.length === 0;
 
     const lastEvent = this.events[this.events.length - 1];
-    const lastEventBox = document.getElementById("last-event");
+    const box = document.getElementById("last-event");
 
     if (!lastEvent) {
-      lastEventBox.textContent = "Sin eventos";
+      box.textContent = "Sin eventos";
       return;
     }
 
-    lastEventBox.textContent =
+    box.textContent =
       `P${lastEvent.point_id} · ${lastEvent.cause_key} · ${lastEvent.player_id || "ZONA"} · ${lastEvent.stroke_type || lastEvent.court_zone} · ${lastEvent.our_games_after}-${lastEvent.rival_games_after}`;
   }
 
