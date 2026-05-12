@@ -8,15 +8,103 @@ const STROKES = {
   "Esp. red": ["bandeja paralela", "bandeja cruzada", "x3", "remate", "rulo", "dejada", "batalla ataque", "batalla defensa"]
 };
 
+const POINT_CAUSES = {
+  G_NF_RIVAL: {
+    point_result: "WON",
+    outcome: "RIVAL_UNFORCED_ERROR",
+    player_id: "",
+    requires_zone: true,
+    requires_stroke: false
+  },
+
+  G_W_J1: {
+    point_result: "WON",
+    outcome: "WINNER",
+    player_id: "J1",
+    requires_zone: false,
+    requires_stroke: true
+  },
+
+  G_W_J2: {
+    point_result: "WON",
+    outcome: "WINNER",
+    player_id: "J2",
+    requires_zone: false,
+    requires_stroke: true
+  },
+
+  G_F_J1: {
+    point_result: "WON",
+    outcome: "FORCED_ERROR",
+    player_id: "J1",
+    requires_zone: false,
+    requires_stroke: true
+  },
+
+  G_F_J2: {
+    point_result: "WON",
+    outcome: "FORCED_ERROR",
+    player_id: "J2",
+    requires_zone: false,
+    requires_stroke: true
+  },
+
+  P_NF_J1: {
+    point_result: "LOST",
+    outcome: "OWN_UNFORCED_ERROR",
+    player_id: "J1",
+    requires_zone: false,
+    requires_stroke: true
+  },
+
+  P_NF_J2: {
+    point_result: "LOST",
+    outcome: "OWN_UNFORCED_ERROR",
+    player_id: "J2",
+    requires_zone: false,
+    requires_stroke: true
+  },
+
+  P_F_J1: {
+    point_result: "LOST",
+    outcome: "OWN_FORCED_ERROR",
+    player_id: "J1",
+    requires_zone: false,
+    requires_stroke: true
+  },
+
+  P_F_J2: {
+    point_result: "LOST",
+    outcome: "OWN_FORCED_ERROR",
+    player_id: "J2",
+    requires_zone: false,
+    requires_stroke: true
+  },
+
+  P_W_RIVAL_J1: {
+    point_result: "LOST",
+    outcome: "RIVAL_WINNER",
+    player_id: "J1",
+    requires_zone: false,
+    requires_stroke: true
+  },
+
+  P_W_RIVAL_J2: {
+    point_result: "LOST",
+    outcome: "RIVAL_WINNER",
+    player_id: "J2",
+    requires_zone: false,
+    requires_stroke: true
+  }
+};
+
 class PadelEventTracker {
   constructor() {
     this.events = [];
     this.pointId = 1;
 
-    this.currentPointResult = "WON";
-    this.currentOutcome = "UNFORCED_ERROR";
+    this.currentCauseKey = "G_NF_RIVAL";
     this.currentRallyRange = "MENOS_3";
-
     this.currentStrokeCategory = "Saque";
 
     this.playerStroke = {
@@ -38,11 +126,16 @@ class PadelEventTracker {
     this.initStrokePanels();
     this.initEvents();
     this.initServiceToggles();
+
     this.updateUI();
     this.renderScore();
     this.updateVisibleRegisterMode();
     this.updatePlayerStrokeCount("J1");
     this.updatePlayerStrokeCount("J2");
+  }
+
+  getCurrentCause() {
+    return POINT_CAUSES[this.currentCauseKey];
   }
 
   initStrokePanels() {
@@ -74,6 +167,7 @@ class PadelEventTracker {
         this.renderCategoryButtons();
         this.renderStrokeButtons("J1");
         this.renderStrokeButtons("J2");
+
         this.updatePlayerStrokeCount("J1");
         this.updatePlayerStrokeCount("J2");
       });
@@ -100,7 +194,9 @@ class PadelEventTracker {
         this.renderStrokeButtons(playerId);
         this.updatePlayerStrokeCount(playerId);
 
-        if (!this.shouldRegisterByZone()) {
+        const cause = this.getCurrentCause();
+
+        if (cause.requires_stroke && cause.player_id === playerId) {
           this.registerPoint({
             zone: "",
             playerId,
@@ -115,14 +211,15 @@ class PadelEventTracker {
   }
 
   updatePlayerStrokeCount(playerId) {
+    const cause = this.getCurrentCause();
     const selectedStroke = this.playerStroke[playerId];
 
     const count = this.events.filter(event =>
       event.player_id === playerId &&
       event.stroke_category === this.currentStrokeCategory &&
       event.stroke_type === selectedStroke &&
-      event.point_result === this.currentPointResult &&
-      event.outcome === this.currentOutcome
+      event.point_result === cause.point_result &&
+      event.outcome === cause.outcome
     ).length;
 
     document.getElementById(`stroke-count-${playerId.toLowerCase()}`).textContent = count;
@@ -161,20 +258,10 @@ class PadelEventTracker {
   }
 
   initEvents() {
-    document.querySelectorAll("[data-point-result]").forEach(button => {
+    document.querySelectorAll("[data-cause]").forEach(button => {
       button.addEventListener("click", () => {
-        this.currentPointResult = button.dataset.pointResult;
-        this.setSelected("[data-point-result]", button);
-        this.updateVisibleRegisterMode();
-        this.updatePlayerStrokeCount("J1");
-        this.updatePlayerStrokeCount("J2");
-      });
-    });
-
-    document.querySelectorAll("[data-outcome]").forEach(button => {
-      button.addEventListener("click", () => {
-        this.currentOutcome = button.dataset.outcome;
-        this.setSelected("[data-outcome]", button);
+        this.currentCauseKey = button.dataset.cause;
+        this.setSelected("[data-cause]", button);
         this.updateVisibleRegisterMode();
         this.updatePlayerStrokeCount("J1");
         this.updatePlayerStrokeCount("J2");
@@ -190,7 +277,9 @@ class PadelEventTracker {
 
     document.querySelectorAll(".court-zone").forEach(zone => {
       zone.addEventListener("click", () => {
-        if (this.shouldRegisterByZone()) {
+        const cause = this.getCurrentCause();
+
+        if (cause.requires_zone) {
           this.registerPoint({
             zone: zone.dataset.zone,
             playerId: "",
@@ -215,22 +304,25 @@ class PadelEventTracker {
     });
   }
 
-  shouldRegisterByZone() {
-    return this.currentPointResult === "WON" &&
-      this.currentOutcome === "UNFORCED_ERROR";
-  }
-
   updateVisibleRegisterMode() {
+    const cause = this.getCurrentCause();
+
     const playersStrokeArea = document.getElementById("players-stroke-area");
     const zoneArea = document.getElementById("zone-area");
+    const panelJ1 = document.getElementById("panel-j1");
+    const panelJ2 = document.getElementById("panel-j2");
 
-    if (this.shouldRegisterByZone()) {
+    if (cause.requires_zone) {
       playersStrokeArea.classList.add("hidden");
       zoneArea.classList.remove("hidden");
-    } else {
-      playersStrokeArea.classList.remove("hidden");
-      zoneArea.classList.add("hidden");
+      return;
     }
+
+    zoneArea.classList.add("hidden");
+    playersStrokeArea.classList.remove("hidden");
+
+    panelJ1.classList.toggle("hidden", cause.player_id !== "J1");
+    panelJ2.classList.toggle("hidden", cause.player_id !== "J2");
   }
 
   setSelected(selector, selectedButton) {
@@ -360,19 +452,21 @@ class PadelEventTracker {
   }
 
   registerPoint(data) {
-    const winner = this.currentPointResult === "WON" ? "OUR" : "RIVAL";
+    const cause = this.getCurrentCause();
+    const winner = cause.point_result === "WON" ? "OUR" : "RIVAL";
 
     this.addScorePoint(winner);
 
     const event = {
       timestamp: new Date().toISOString(),
       point_id: this.pointId,
-      point_result: this.currentPointResult,
+      cause_key: this.currentCauseKey,
+      point_result: cause.point_result,
       player_id: data.playerId,
       player_team: data.playerId ? "OUR" : "",
       stroke_category: data.category,
       stroke_type: data.stroke,
-      outcome: this.currentOutcome,
+      outcome: cause.outcome,
       rally: this.currentRallyRange,
       server: this.getServiceValue("server-toggle"),
       serve_number: this.getServiceValue("serve-number-toggle"),
@@ -422,13 +516,14 @@ class PadelEventTracker {
     }
 
     lastEventBox.textContent =
-      `P${lastEvent.point_id} · ${lastEvent.point_result} · ${lastEvent.player_id || "ZONA"} · ${lastEvent.outcome} · ${lastEvent.stroke_type || lastEvent.court_zone} · ${lastEvent.our_games_after}-${lastEvent.rival_games_after}`;
+      `P${lastEvent.point_id} · ${lastEvent.cause_key} · ${lastEvent.player_id || "ZONA"} · ${lastEvent.stroke_type || lastEvent.court_zone} · ${lastEvent.our_games_after}-${lastEvent.rival_games_after}`;
   }
 
   exportCSV() {
     const headers = [
       "timestamp",
       "point_id",
+      "cause_key",
       "point_result",
       "player_id",
       "player_team",
