@@ -402,3 +402,6 @@ select {
 button:disabled {
   opacity: 0.35;
 }
+.cause-row.three {
+  grid-template-columns: repeat(3, 1fr);
+}
