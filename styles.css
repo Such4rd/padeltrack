@@ -170,47 +170,42 @@ select {
   border-color: #1565c0;
 }
 
-/* RESULTADO */
+/* CAUSA DEL PUNTO */
 
-.point-result-row {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 4px;
-}
-
-.outcome-row {
+.cause-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 4px;
 }
 
-.btn.selected {
+.cause-btn {
+  height: 31px;
+  font-size: 10px;
+  line-height: 1;
+  padding: 1px 3px;
+  background: #191919;
+}
+
+.cause-btn.selected {
   color: #fff;
 }
 
-.btn.selected.won {
+.cause-btn.cause-won {
+  border-color: #2f7d32;
+}
+
+.cause-btn.cause-lost {
+  border-color: #8c2f2f;
+}
+
+.cause-btn.cause-won.selected {
   background: #4caf50;
   border-color: #4caf50;
 }
 
-.btn.selected.lost {
+.cause-btn.cause-lost.selected {
   background: #b64040;
   border-color: #b64040;
-}
-
-.btn.selected.nf {
-  background: #b64040;
-  border-color: #b64040;
-}
-
-.btn.selected.f {
-  background: #c57a24;
-  border-color: #c57a24;
-}
-
-.btn.selected.w {
-  background: #4caf50;
-  border-color: #4caf50;
 }
 
 /* JUGADORES */
@@ -427,6 +422,15 @@ button:disabled {
 
   .service-divider {
     height: 24px;
+  }
+
+  .cause-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .cause-btn {
+    height: 27px;
+    font-size: 8.6px;
   }
 
   .category-buttons {
