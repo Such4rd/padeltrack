@@ -9,17 +9,54 @@ const STROKES = {
 };
 
 const POINT_CAUSES = {
-  G_NF_RIVAL: { point_result: "WON", outcome: "RIVAL_UNFORCED_ERROR", player_id: "", requires_zone: true },
-  G_W_J1: { point_result: "WON", outcome: "WINNER", player_id: "J1", requires_zone: false },
-  G_W_J2: { point_result: "WON", outcome: "WINNER", player_id: "J2", requires_zone: false },
-  G_F_J1: { point_result: "WON", outcome: "FORCED_ERROR", player_id: "J1", requires_zone: false },
-  G_F_J2: { point_result: "WON", outcome: "FORCED_ERROR", player_id: "J2", requires_zone: false },
-  P_NF_J1: { point_result: "LOST", outcome: "OWN_UNFORCED_ERROR", player_id: "J1", requires_zone: false },
-  P_NF_J2: { point_result: "LOST", outcome: "OWN_UNFORCED_ERROR", player_id: "J2", requires_zone: false },
-  P_F_J1: { point_result: "LOST", outcome: "OWN_FORCED_ERROR", player_id: "J1", requires_zone: false },
-  P_F_J2: { point_result: "LOST", outcome: "OWN_FORCED_ERROR", player_id: "J2", requires_zone: false },
-  P_W_RIVAL_J1: { point_result: "LOST", outcome: "RIVAL_WINNER", player_id: "J1", requires_zone: false },
-  P_W_RIVAL_J2: { point_result: "LOST", outcome: "RIVAL_WINNER", player_id: "J2", requires_zone: false }
+  G_NF_RIVAL: {
+    point_result: "WON",
+    outcome: "RIVAL_UNFORCED_ERROR",
+    player_id: "",
+    requires_zone: true
+  },
+
+  G_WF_J1: {
+    point_result: "WON",
+    outcome: "WINNER_OR_FORCED",
+    player_id: "J1",
+    requires_zone: false
+  },
+
+  G_WF_J2: {
+    point_result: "WON",
+    outcome: "WINNER_OR_FORCED",
+    player_id: "J2",
+    requires_zone: false
+  },
+
+  P_NF_J1: {
+    point_result: "LOST",
+    outcome: "OWN_UNFORCED_ERROR",
+    player_id: "J1",
+    requires_zone: false
+  },
+
+  P_NF_J2: {
+    point_result: "LOST",
+    outcome: "OWN_UNFORCED_ERROR",
+    player_id: "J2",
+    requires_zone: false
+  },
+
+  P_WF_RIVAL_J1: {
+    point_result: "LOST",
+    outcome: "RIVAL_WINNER_OR_OWN_FORCED",
+    player_id: "J1",
+    requires_zone: false
+  },
+
+  P_WF_RIVAL_J2: {
+    point_result: "LOST",
+    outcome: "RIVAL_WINNER_OR_OWN_FORCED",
+    player_id: "J2",
+    requires_zone: false
+  }
 };
 
 class PadelEventTracker {
