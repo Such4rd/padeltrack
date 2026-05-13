@@ -160,7 +160,7 @@ button{
 
 .category-buttons{
   display:grid;
-  grid-template-columns:repeat(6,1fr);
+  grid-template-columns:repeat(4,1fr);
   gap:3px;
 }
 
@@ -218,18 +218,20 @@ button{
   font-weight:900;
 }
 
+/* CAMBIO CLAVE: 2 COLUMNAS DENTRO DE CADA PANEL */
 .stroke-buttons{
   display:grid;
-  grid-template-columns:1fr;
+  grid-template-columns:repeat(2,1fr);
   gap:2px;
 }
 
 .stroke-btn{
-  height:22px;
-  min-height:22px;
-  font-size:7px;
-  line-height:.9;
+  height:20px;
+  min-height:20px;
+  font-size:6.2px;
+  line-height:.85;
   padding:1px;
+  white-space:normal;
 }
 
 .last-event{
